@@ -15,6 +15,7 @@ Devise.setup do |config|
   # available as additional gems.
   require 'devise/orm/active_record'
 
+
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
@@ -197,8 +198,10 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-   config.omniauth :twitter, ENV["TWITTER_CONSUMER_KEY"], ENV["TWITTER_CONSUMER_SECRET"]
-   config.omniauth :facebook, 'APP_ID', 'APP_SECRET' 
+   config.omniauth :twitter, "SxKNQt7Fl9rcrcM20NRUQ", "ahJ9bjRbpcRPP9J00iRwwPQglWAnv1LGoC87t8o"
+   config.omniauth :facebook, '255449317931835', '53d57f719fa2271dba52a475ceb73db6' 
+   OmniAuth.config.logger = Logger.new(STDOUT)
+   OmniAuth.logger.progname = "omniauth"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

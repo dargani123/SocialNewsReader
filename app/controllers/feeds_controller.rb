@@ -10,4 +10,9 @@ class FeedsController < ApplicationController
 			format.json {render :json => @tasks}
 		end
 	end 
+
+	def create
+		feed = Feed.create(params[:feed])
+		render :json => feed
+	end 
 end

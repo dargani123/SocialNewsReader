@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.13'
 
-# Bundle edge Rails instead:
+ # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
@@ -24,6 +24,18 @@ gem 'jquery-rails'
 
 gem 'simple-rss'
 
+gem 'ejs'
+
+gem 'devise'
+
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'twitter'
+gem 'fb_graph'
+gem 'nifty-generators'
+
+gem 'oa-core' 
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -38,3 +50,5 @@ gem 'simple-rss'
 
 # To use debugger
 # gem 'debugger'
+
+gem "mocha", :group => :test

@@ -1,7 +1,18 @@
 NewsReader::Application.routes.draw do
-  resources :feeds do 
-    resources :entries 
-  end
+    root :to => "entries#index"
+
+  resources :authentications
+
+  devise_for :users,
+  controllers: {omniauth_callbacks: "authentications", registrations: "registrations"}
+
+
+
+  resources :feeds
+  resources :entries
+  resources :users
+  
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

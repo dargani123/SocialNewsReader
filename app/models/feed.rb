@@ -1,17 +1,13 @@
+
 class Feed < ActiveRecord::Base
-  attr_accessible :uri
+  attr_accessible :icon_url, :title, :description 
 
   has_many :entries
+  belongs_to :user
 
   def last_entries(n)
   	entries[entries.length-n+1..-1]
   end
-
-  def uri=(uri_)
-  	write_attribute(:uri, uri_)
-  	entries.build(SimpleRSS.parse(open(uri_)).entries)
-  end
-
 
 
 end

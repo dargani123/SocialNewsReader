@@ -1,20 +1,21 @@
 FR.Models.Feed = Backbone.RelationalModel.extend({ 
-
+	urlRoot: "/feeds",
 	relations: [{
 		type: Backbone.HasMany,
 		key: 'entries',
-		relatedModel: 'Entry',
-		collectionType: 'EntryCollection',
+		relatedModel: 'FR.Models.Entry',
+		collectionType: 'FR.Collections.FeedEntries',
 		reverseRelation: {
 			key: 'feed'
-			includeinJSON: 'id'
+		},
+
+		collectionOptions: function (feed) {
+			return {feed: feed};
 		}
-	}]
+	}],
 
-	
-
-
-
-
+	schema: {
+		uri: "Text"
+	}
 
 });

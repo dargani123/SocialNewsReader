@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p>
+
   <title>NewsReader</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div class='container-fluid clearfix'> 
+	<div class='well clearfix'>
 
 <%= yield %>
 
+	</div>
+</div>
+
+
 </body>
+
+<%= user_signed_in? ? link_to( "Sign Out", destroy_user_session_url, method: :delete) : link_to("Sign In", new_user_session_url)%> 
 </html>

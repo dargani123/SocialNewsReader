@@ -8,7 +8,7 @@
   $(function () {
 
     var feedsData = <%= Feed.all.to_json.html_safe %>;
-    var entriesData = <%= Entry.all.to_json.html_safe %>;
+    var entriesData = <%= current_user.entries.to_json.html_safe %>;
 
     window.FR.initialize(
       $("#content"),

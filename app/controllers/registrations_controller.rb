@@ -13,4 +13,8 @@ class RegistrationsController < ApplicationController
 		session[:omniauth] = nil unless @user.new_record?
 	end
 
+	def new 
+		@user = User.new 
+	end
+
 end

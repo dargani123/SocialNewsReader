@@ -1,0 +1,15 @@
+<h1> Feeds </h1>
+
+<div id="feed_index"></div> 
+
+<script type="text/javascript">
+  $(function () {
+
+    var feedsData = <%= Feed.all.to_json.html_safe %>;
+    
+    window.TD.initialize(
+      $("#feed_index"),
+      feedsData
+    );
+  });
+</script

@@ -1,0 +1,20 @@
+<h1> Entries </h1>
+
+<div class="row-fluid">
+  <div id="content" style="float: left;" class="span12"></div> 
+</div>
+
+<script type="text/javascript">
+  $(function () {
+
+    var feedsData = <%= Feed.all.to_json.html_safe %>;
+    var entriesData = <%= Entry.all.to_json.html_safe %>;
+
+    window.FR.initialize(
+      $("#content"),
+      feedsData,
+      entriesData
+    );
+  });
+
+</script>

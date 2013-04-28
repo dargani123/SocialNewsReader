@@ -1,0 +1,12 @@
+
+<div><input class="entry-input" type="text" value="" placeholder='Share article here'></div>	
+<ul>
+	<% entries.each( function(entry) { %>
+		<li> <a href=<%=entry.escape('url')%>> 
+			<img src=<%= entry.escape("image") %> width='150' height='150'>
+			<%= entry.escape('title') %> </a> 
+			<small><div> <%= entry.escape('description') %> </div></small>
+			<strong> <%= entry.escape('post') %> </strong>
+		</li>  
+	<% }); %> 
+</ul>

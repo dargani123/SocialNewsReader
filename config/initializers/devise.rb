@@ -199,7 +199,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
    config.omniauth :twitter, "ndRglMyRouyQRbxOrGuHdw", "7iEAecdYUVyPpyOtB2IxISmJGCbJy9XVWkt1TEbyEY"
-   config.omniauth :facebook, '255449317931835', '53d57f719fa2271dba52a475ceb73db6' 
+   config.omniauth :facebook, '132855336905564', 'f6146ed38e89b2334771e1b812efa70a' 
    OmniAuth.config.logger = Logger.new(STDOUT)
    OmniAuth.logger.progname = "omniauth"
 

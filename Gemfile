@@ -39,6 +39,7 @@ gem 'simple-rss'
 
 gem 'ejs'
 
+gem 'koala'
 
 
 # To use ActiveModel has_secure_password

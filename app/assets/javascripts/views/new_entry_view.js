@@ -9,7 +9,33 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 
 	events: {
 		"input input.entry-input": "showLinkAttributes",
-		"click button.submit-post": "postEntry"
+		"click button.submit-post": "postEntry",
+		"click button.share-facebook": "shareFacebook",
+		"click button.share-twitter": "tweet"
+	},
+
+	tweet: function(ev) {
+		var entry_id = $(ev.target).attr('data-twt');
+		console.log(entry_id);
+		var entry = FR.Store.Entries.get(entry_id);
+		console.log(entry);
+		$.ajax({url: "/twitter_tweets", 
+			type: 'POST',
+			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+			data: entry.toJSON() 
+		});				
+	},
+
+	shareFacebook: function(ev) { 	
+		var entry_id = $(ev.target).attr('data-fb');
+		console.log(entry_id);
+		var entry = FR.Store.Entries.get(entry_id);
+		console.log(entry);
+		$.ajax({url: "/facebook_posts", 
+			type: 'POST',
+			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+			data: entry.toJSON() 
+		});	
 	},
 
 	postEntry: function() {

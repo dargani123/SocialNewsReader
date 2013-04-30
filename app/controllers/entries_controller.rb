@@ -16,4 +16,5 @@ class EntriesController < ApplicationController
 		entry.save
 		render :json => entry
 	end 	
+
 end

@@ -39,18 +39,42 @@ class User < ActiveRecord::Base
 	 end
 	end
 
-	# def self.find_or_create_by_facebook_oauth(auth)
-	# 	user = User.where(:provider => auth.provider, :uid => auth.uid).first
+	def facebook_token 
+		authentications.where(provider: "facebook").first.token
+	end
 
-	# 	unless user
-	# 		user = User.create!(
-	# 		provider: auth.provider,
-	# 		uid: auth.uid,
-	# 		email: auth.info.email,
-	# 		password: Devise.friendly_token[0,20]
-	# 		)
-	# 	end
-	# 	user
-	# end
+	def twitter_token
+		authentications.where(provider: "twitter").first.token
+	end
+
+	def secret_twitter_token 
+		authentications.where(provider: "twitter").first.token_secret
+	end
+
+	def facebook_friends 
+		graph = Koala::Facebook::API.new(facebook_token)
+		graph.get_object("me")
+		graph.get_connections("me", "friends")
+	end 
+
+	def tweet(params)
+		client = Twitter::Client.new(
+			:consumer_key => "ndRglMyRouyQRbxOrGuHdw",
+			:consumer_secret => "7iEAecdYUVyPpyOtB2IxISmJGCbJy9XVWkt1TEbyEY",
+			:oauth_token => twitter_token,
+			:oauth_token_secret => secret_twitter_token
+		)
+
+		client.update("message goes here, test #{params['url']}")
+
+
+	end
+
+	def post(params)
+		graph = Koala::Facebook::API.new(facebook_token)
+		p "URL!!!!!!!"
+		p params['url']
+		graph.put_connections("me", "links", :link => params['url'])
+	end 
 
 end

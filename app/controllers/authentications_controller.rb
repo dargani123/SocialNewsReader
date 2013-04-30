@@ -63,7 +63,9 @@ class AuthenticationsController < ApplicationController
       user.email = omni['extra']['raw_info']['email']
       user.apply_omniauth(omni)  
       if user.save 
+        p "USER SAVED" 
        flash[:notice] = "Logged in."
+       sign_in user
        redirect_to edit_user_registration_path
       else
        session[:omniauth] = omni.except('extra')
@@ -72,6 +74,10 @@ class AuthenticationsController < ApplicationController
     end
   end
 
+
+  def authenticate(authentication)
+
+  end
 
 
 

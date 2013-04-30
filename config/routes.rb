@@ -11,7 +11,8 @@ NewsReader::Application.routes.draw do
   resources :feeds
   resources :entries
   resources :users
-  
+  resources :facebook_posts, :only => [:create]
+  resources :twitter_tweets, :only => [:create]
 
 
   # The priority is based upon order of creation:

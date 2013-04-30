@@ -6,10 +6,10 @@ window.FR = {
 	Routers: {},
 	Store: {},
 
-	initialize: function ($content, feedsData, entriesData){	
+	initialize: function ($content, feedsData, entriesData, followersData){	
 		FR.Store.Feeds = new FR.Collections.Feeds(feedsData);
 		FR.Store.Entries = new FR.Collections.Feeds(entriesData);
-
+		FR.Store.Followers = new FR.Collections.Feeds(followersData);
 		// this.installSidebar($sidebar);
 
 		new FR.Routers.NewsRouter($content);
@@ -21,5 +21,6 @@ window.FR = {
 		var sidebarView = new FR.Views.SidebarView();
 
 		$sidebar.html(sidebarView.render().$el);
+
 	}
 };

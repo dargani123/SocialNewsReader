@@ -11,10 +11,11 @@ class User < ActiveRecord::Base
   attr_accessible :provider, :uid
 
 
-
 	has_many :entries
 	has_many :feeds
 	has_many :authentications
+
+	has_many :followings, :class_name => "Follower"
 
 
 	def apply_omniauth(omni)
@@ -66,8 +67,13 @@ class User < ActiveRecord::Base
 		)
 
 		client.update("#{params['post']} #{params['url']}")
+	end
 
-
+	def updatedFollowings
+		facebook_friends.each do |friend| 
+			Follower::FacebookFollower.create!(user_id: self.id, name: friend['name'], uid: friend['id'])
+		end 
+		return followings
 	end
 
 	def post(params)

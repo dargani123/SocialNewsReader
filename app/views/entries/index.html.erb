@@ -1,4 +1,3 @@
-<h1> Entries </h1>
 
 <div class="row-fluid">
   <div id="content" style="float: left;" class="span12"></div> 
@@ -15,11 +14,13 @@
 
     var feedsData = <%= Feed.all.to_json.html_safe %>;
     var entriesData = <%= current_user.entries.to_json.html_safe %>;
+    var followingsData = <%= current_user.updatedFollowings.to_json.html_safe %>; 
 
     window.FR.initialize(
       $("#content"),
       feedsData,
-      entriesData
+      entriesData,
+      followingsData
     );
   });
 

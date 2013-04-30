@@ -1,4 +1,6 @@
 FR.Views.NewEntryView = Backbone.View.extend ({ 
+	// break into separate views? 
+	// 
 
 	initialize: function() {
 		var that = this;
@@ -15,7 +17,6 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		"click button.share": "batchShare",
 		"click button.submit-tweet": "sendTweet",
 		"click button.submit-fb": "sendFB"
-
 	},
 
 	askForTweetText: function(ev) {
@@ -23,7 +24,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		var entry_id = $(ev.target).attr('data-twt');
 		that.entry = FR.Store.Entries.get(entry_id);
 		$("<textarea class='twitter-input'> </textarea>").insertAfter($(ev.target));
-		$('.twitter-input').val(that.entry.get('post')); 
+		$('.twitter-input').val(that.entry.get('post'))	; 
 		$("<button class='submit-tweet'> Tweet Now! </button>").insertAfter($('.twitter-input'));			
 	},
 

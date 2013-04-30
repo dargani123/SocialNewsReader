@@ -10,42 +10,60 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	events: {
 		"input input.entry-input": "showLinkAttributes",
 		"click button.submit-post": "postEntry",
-		"click button.share-facebook": "shareFacebook",
-		"click button.share-twitter": "tweet"
+		"click button.share-facebook": "askForFacebookText",
+		"click button.share-twitter": "askForTweetText",
+		"click button.share": "batchShare",
+		"click button.submit-tweet": "sendTweet",
+		"click button.submit-fb": "sendFB"
+
 	},
 
-	tweet: function(ev) {
+	askForTweetText: function(ev) {
+		var that = this;
 		var entry_id = $(ev.target).attr('data-twt');
-		console.log(entry_id);
-		var entry = FR.Store.Entries.get(entry_id);
-		console.log(entry);
+		that.entry = FR.Store.Entries.get(entry_id);
+		$("<textarea class='twitter-input'> </textarea>").insertAfter($(ev.target));
+		$('.twitter-input').val(that.entry.get('post')); 
+		$("<button class='submit-tweet'> Tweet Now! </button>").insertAfter($('.twitter-input'));			
+	},
+
+	sendTweet: function() {
+		var that = this; 
+		that.entry.set({post: $('.twitter-input').val()})
 		$.ajax({url: "/twitter_tweets", 
 			type: 'POST',
 			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-			data: entry.toJSON() 
-		});				
+			data: that.entry.toJSON(),
+			success: function() {
+				$('button.submit-tweet').remove();
+				$('.twitter-input').remove();
+			}
+		});			
+
 	},
 
-	shareFacebook: function(ev) { 	
+	askForFacebookText: function(ev) { 	
+		var that = this;
 		var entry_id = $(ev.target).attr('data-fb');
-		console.log(entry_id);
-		var entry = FR.Store.Entries.get(entry_id);
-		console.log(entry);
+		that.entry = FR.Store.Entries.get(entry_id);
+
+		$("<textarea class='fb-input'> </textarea>").insertAfter($(ev.target));
+		$('.fb-input').val(that.entry.get('post')); 
+		$("<button class='submit-fb'> Share Now! </button>").insertAfter($('.fb-input'));	
+	},	
+
+	sendFB: function() {
+		var that = this; 
+		that.entry.set({post: $('.fb-input').val()})
 		$.ajax({url: "/facebook_posts", 
 			type: 'POST',
 			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-			data: entry.toJSON() 
-		});	
-	},
-
-	postEntry: function() {
-		var that = this;
-		that.entry.set({post: $('.Post').val()});
-		that.entry.save({}, {
+			data: that.entry.toJSON(), 
 			success: function() {
-				FR.Store.Entries.add(that.entry);
+				$('button.submit-fb').remove();
+				$('.fb-input').remove();
 			}
-		});
+		});	
 	},
 
 	render: function() {
@@ -60,7 +78,6 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	showLinkAttributes: function(){
 		var that = this;
 		var url = $('input.entry-input').val();
-		console.log(url);
 
 		if(url.length > 0) {
 			that._showEmbedlyDisplay(url);
@@ -71,13 +88,23 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		}
 	},
 
+	postEntry: function() {
+		var that = this;
+		that.entry.set({post: $('.Post').val()});
+		
+		that.entry.save({}, {
+			success: function() {
+				FR.Store.Entries.add(that.entry);
+			}
+		});
+	},
+
 	_showEmbedlyDisplay: function(url) {
 		var that = this;
 		$.ajax({
 			dataType: "JSONP",
 			url: that.request+escape(url),
 			success: function(embedly_data) {
-				console.log(embedly_data);
 
 				var renderedContent = JST["entries/entry_to_add"]({
 					entry: that._setThatEntryAttributes(embedly_data)

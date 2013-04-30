@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
 			:oauth_token_secret => secret_twitter_token
 		)
 
-		client.update("message goes here, test #{params['url']}")
+		client.update("#{params['post']} #{params['url']}")
 
 
 	end
@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
 		graph = Koala::Facebook::API.new(facebook_token)
 		p "URL!!!!!!!"
 		p params['url']
-		graph.put_connections("me", "links", :link => params['url'])
+		graph.put_connections("me", "links", :link => params['url'], :message => params['post'])
 	end 
 
 end

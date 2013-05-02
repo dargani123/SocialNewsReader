@@ -198,8 +198,8 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-   config.omniauth :twitter, "ndRglMyRouyQRbxOrGuHdw", "7iEAecdYUVyPpyOtB2IxISmJGCbJy9XVWkt1TEbyEY"
-   config.omniauth :facebook, '132855336905564', '76e4aab7609a18c49640c584387e740d',  :scope => 'publish_stream,offline_access' 
+   config.omniauth :twitter, "SGgdy9uvxEHy9Ke7FMllg", "48clrGvF9lTocZSVgLGoyguQqOKgnXjpGHHBFFhNQ"
+   config.omniauth :facebook, '132855336905564', '76e4aab7609a18c49640c584387e740d',  :scope => 'publish_stream,offline_access,read_stream' 
    OmniAuth.config.logger = Logger.new(STDOUT)
    OmniAuth.logger.progname = "omniauth"
 

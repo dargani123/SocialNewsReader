@@ -1,0 +1,6 @@
+class TwitterFollower < Follower
+end
+
+
+
+

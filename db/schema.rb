@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430220126) do
+ActiveRecord::Schema.define(:version => 20130502181144) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -22,6 +22,22 @@ ActiveRecord::Schema.define(:version => 20130430220126) do
     t.string   "token"
     t.string   "token_secret"
   end
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "entries", :force => true do |t|
     t.string   "title"
@@ -56,6 +72,17 @@ ActiveRecord::Schema.define(:version => 20130430220126) do
   end
 
   add_index "followers", ["user_id"], :name => "index_followers_on_user_id"
+
+  create_table "news_feed_articles", :force => true do |t|
+    t.string   "like_count"
+    t.string   "comment_count"
+    t.string   "time"
+    t.string   "link_id"
+    t.string   "url"
+    t.integer  "user_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.datetime "created_at",                                            :null => false

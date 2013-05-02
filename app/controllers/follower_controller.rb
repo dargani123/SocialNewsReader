@@ -3,7 +3,7 @@ responds_to :json
 
 	def index 
 		followers = current_user.followers
-		p "SHOULD NOT BE GETTING TO FOLLOWERS CONTROLLER RIGHT NOW"
-		fail 
+		"SHOULD NOT BE GETTING TO FOLLOWERS CONTROLLER RIGHT NOW"
+		render :json => followers 
 	end 
 end

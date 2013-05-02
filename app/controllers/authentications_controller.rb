@@ -36,7 +36,9 @@ class AuthenticationsController < ApplicationController
       user.apply_omniauth(omni) 
       if user.save
        flash[:notice] = "Logged in."
-       sign_in_and_redirect User.find(user.id)
+       sign_in User.find(user.id)
+       user.updateTwitterFollowings ## TWITTER ADD NEWS FEED STUFF STILL
+       redirect_to
       else
        session[:omniauth] = omni.except('extra')
        redirect_to new_user_registration_path
@@ -63,20 +65,16 @@ class AuthenticationsController < ApplicationController
       user.email = omni['extra']['raw_info']['email']
       user.apply_omniauth(omni)  
       if user.save 
-        p "USER SAVED" 
        flash[:notice] = "Logged in."
        sign_in user
+       # user.updateFacebookFollowings
+       user.updateFacebookFeedStories
        redirect_to edit_user_registration_path
       else
        session[:omniauth] = omni.except('extra')
        redirect_to new_user_registration_path
       end
     end
-  end
-
-
-  def authenticate(authentication)
-
   end
 
 

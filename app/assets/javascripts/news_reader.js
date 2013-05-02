@@ -21,6 +21,5 @@ window.FR = {
 		var sidebarView = new FR.Views.SidebarView();
 
 		$sidebar.html(sidebarView.render().$el);
-
 	}
 };

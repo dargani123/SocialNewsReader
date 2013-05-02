@@ -21,6 +21,8 @@ gem 'binding_of_caller'
 gem 'oa-core'
 
 
+
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -42,6 +44,8 @@ gem 'ejs'
 gem 'koala'
 
 gem 'rest-client'
+
+gem 'delayed_job_active_record'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

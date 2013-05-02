@@ -5,7 +5,7 @@
 
   <%- User.omniauth_providers.each do |provider| %>
     <% unless current_user.authentications.map(&:provider).include?(provider.to_s) %> 
-      <%= link_to "Connect your with #{provider.to_s.titleize}", omniauth_authorize_path(current_user, provider) %><br />
+      <%= link_to "Connect your #{provider.to_s.titleize}", omniauth_authorize_path(current_user, provider) %><br />
     <% end %> 
   <% end -%>
 
@@ -14,7 +14,8 @@
 
     var feedsData = <%= Feed.all.to_json.html_safe %>;
     var entriesData = <%= current_user.entries.to_json.html_safe %>;
-    var followingsData = <%= current_user.updatedFollowings.to_json.html_safe %>; 
+     var followingsData = <%= current_user.followings.to_json.html_safe %>; 
+    // var followingsData = {};
 
     window.FR.initialize(
       $("#content"),

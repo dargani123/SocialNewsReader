@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130503081555) do
+ActiveRecord::Schema.define(:version => 20130503203835) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -88,6 +88,8 @@ ActiveRecord::Schema.define(:version => 20130503081555) do
     t.integer  "link_id"
     t.string   "image_url"
     t.string   "type"
+    t.string   "description"
+    t.string   "title"
   end
 
   create_table "users", :force => true do |t|

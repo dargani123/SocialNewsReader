@@ -52,13 +52,7 @@ class User < ActiveRecord::Base
 	end
 
 	def tweet(params)
-		client = Twitter::Client.new(
-			:consumer_key => "SGgdy9uvxEHy9Ke7FMllg",
-			:consumer_secret => "48clrGvF9lTocZSVgLGoyguQqOKgnXjpGHHBFFhNQ",
-			:oauth_token => twitter_token,
-			:oauth_token_secret => secret_twitter_token
-		)
-
+		client = getTwitterClient
 		client.update("#{params['post']} #{params['url']}")
 	end
 
@@ -79,8 +73,8 @@ class User < ActiveRecord::Base
 
 	def getTwitterClient
 		return Twitter::Client.new(
-			:consumer_key => "SGgdy9uvxEHy9Ke7FMllg",
-			:consumer_secret => "48clrGvF9lTocZSVgLGoyguQqOKgnXjpGHHBFFhNQ",
+			:consumer_key => "48wDtsMN0T8yITXKsKFbQ",
+			:consumer_secret => "eH4P4Nny7FutPTRmAGpZFoDYMumbpnr46CSskETxeyA",
 			:oauth_token => twitter_token,
 			:oauth_token_secret => secret_twitter_token
 		)
@@ -110,21 +104,20 @@ class User < ActiveRecord::Base
 			friend_ids = facebook_friend_ids
 			threads, results = [], []
 			start = Time.now()
-			0.upto(friend_ids.count/6) do |i| 
+			0.upto(friend_ids.count/5-1) do |i| 
 				threads << Thread.new { 
 						ids = []	
-						index = (i*6) 
-						p "i: #{i}"
-
+						index = (i*5) 
 						1.upto([5, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-						query = "SELECT url, link_id, owner, like_info, comment_info, created_time FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"				
+						query = "SELECT url, link_id, owner, like_info, comment_info, message created_time FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"				
+						p query 
 						graph.fql_query(query) {|result| results << result unless result.empty? }
 				}
 			end
 			threads.each { |aThread| aThread.join }
 			results.each { |result| insertFacebookArticle(result) }
 		end
-	end
+	end 
 
 	def post(params)
 		graph = Koala::Facebook::API.new(facebook_token)
@@ -136,7 +129,8 @@ class User < ActiveRecord::Base
 	end
 
 	def linkedTwitter? 
-		authentications.where(provider: "facebook").count > 0
+		p "LINKED TWITTER CALLED"
+		authentications.where(provider: "twitter").count > 0
 	end
 
 	private 
@@ -144,14 +138,16 @@ class User < ActiveRecord::Base
 			results.each do |result|
 			FacebookArticle.create!( ## Missing profile_image_url and name 
 				author_id: result['owner'],
-				text: result['owner_comment'],
+				text: result['message'],
 				score: (result['like_info']['like_count'] + result['comment_info']['comment_count']),
 				score_criteria: { like_count: result['like_info']['like_count'], comment_count: result['comment_info']['comment_count'] }.to_json,
 				time: result['created_time'],
 				url: result['url'],
 				link_id: result['link_id'],
 				user_id: self.id,
-				image_url: result['image_url']
+				image_url: result['picture'],
+				title: result['name'],
+				description: result['description']
 			)
 			end
 		end
@@ -169,6 +165,7 @@ class User < ActiveRecord::Base
 					url: status.urls.first.expanded_url, 
 					link_id: status.id,
 					user_id: self.id
+					# type: "TwitterArticle"
 				)
 			end
 		end

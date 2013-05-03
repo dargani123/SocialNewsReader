@@ -17,7 +17,6 @@
 //= require underscore
 //= require backbone
 //= require backbone-forms
-//= require backbone_relational
 //
 // Your top-level namespace:
 //= require news_reader
@@ -25,9 +24,9 @@
 // Directories with Backbone classes:
 //= require_tree ./models
 //= require_tree ./collections
-//= require_tree ./routers
 //= require_tree ./views
 //= require_tree ../templates
+//= require_tree ./routers
 //
 // Catch-all for other Javascripts:
 //= require_tree .

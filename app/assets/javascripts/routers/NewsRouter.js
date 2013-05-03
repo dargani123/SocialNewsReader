@@ -31,8 +31,10 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	newsFeed: function() {
 		console.log("arrived at news feed method in router");
 		var that = this; 
-		var newsFeedView = new FR.Views.NewsFeedView(); 
-		newsFeedView.render();
+		var newsFeedView = new FR.Views.NewsFeedView({
+			collection: FR.Store.Articles
+		}); 
+		that.$rootEl.html(newsFeedView.render().$el);
 	}
 
 

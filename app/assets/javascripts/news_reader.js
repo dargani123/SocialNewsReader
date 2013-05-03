@@ -7,9 +7,10 @@ window.FR = {
 	Store: {},
 
 	initialize: function ($content, feedsData, entriesData, followersData){	
-		FR.Store.Feeds = new FR.Collections.Feeds(feedsData);
-		FR.Store.Entries = new FR.Collections.Feeds(entriesData);
-		FR.Store.Followers = new FR.Collections.Feeds(followersData);
+		FR.Store.Feeds = {};
+		FR.Store.Entries = new FR.Collections.Entries(entriesData);
+		FR.Store.Followers = new FR.Collections.Followers(followersData);
+		FR.Store.Articles = new FR.Collections.Articles();
 		// this.installSidebar($sidebar);
 
 		new FR.Routers.NewsRouter($content);

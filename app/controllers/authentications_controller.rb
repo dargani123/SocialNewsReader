@@ -24,9 +24,7 @@ class AuthenticationsController < ApplicationController
     
     if authentication
       flash[:notice] = "Logged in Successfully"
-      sign_in_and_redirect User.find(authentication.user_id)
-      # current_user.updateTwitterFollowings
-      
+      sign_in_and_redirect User.find(authentication.user_id)      
     elsif current_user
       token = omni['credentials'].token
       token_secret = omni['credentials'].secret
@@ -40,7 +38,6 @@ class AuthenticationsController < ApplicationController
        p "Twitter save true"
        flash[:notice] = "Logged in."
        sign_in User.find(user.id) ## TWITTER ADD NEWS FEED STUFF STILL
-       user.updateTwitterFollowings
        redirect_to edit_user_registration_path
       else
        p "Twitter save false"
@@ -66,10 +63,9 @@ class AuthenticationsController < ApplicationController
       sign_in_and_redirect current_user
     else
       user = User.new 
-      p "SHOULD BE GETTING THE EMAIL"
       user.email = omni['extra']['raw_info']['email']
-      p user.email 
       user.apply_omniauth(omni)  
+      
       if user.save 
        flash[:notice] = "Logged in."
        sign_in user
@@ -80,6 +76,7 @@ class AuthenticationsController < ApplicationController
        session[:omniauth] = omni.except('extra')
        redirect_to new_user_registration_path
       end
+
     end
   end
 

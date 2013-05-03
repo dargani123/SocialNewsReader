@@ -1,0 +1,17 @@
+<ul>
+	<% articles.each( function(article) { %>
+		<li> <a href="<%=article.escape('url') %>"> 
+			<img src="<%= article.escape('image_url')%>" width='120' height='120'>
+			 Title of Article goes here </a> 
+		<button class="share-facebook" data-fb=<%=article.escape('link_id')%>>FB Share</button> 
+		<button class="share-twitter" data-twt=<%=article.escape('link_id')%>>Tweet</button> 
+			<small><div> description goes here </div></small>
+			<strong> <%= article.escape('text') %> </strong>
+		</li>  	
+
+	<% }); %> 
+
+</ul>
+
+attr_accessible :time, :url, :user_id, :profile_image_url, :name, :author_id, :text, :score, :score_criteria, :link_id, :image_url, :type
+

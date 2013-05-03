@@ -1,4 +1,4 @@
-require 'Thread'
+# require 'Thread'
 require 'json'
 
 class User < ActiveRecord::Base

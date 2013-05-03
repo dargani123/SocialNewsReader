@@ -51,6 +51,7 @@ gem 'koala'
 gem 'rest-client'
 
 gem 'delayed_job_active_record'
+gem 'delayed_job'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

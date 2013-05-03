@@ -189,6 +189,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   coffee-rails (~> 3.2.1)
+  delayed_job
   delayed_job_active_record
   devise
   ejs

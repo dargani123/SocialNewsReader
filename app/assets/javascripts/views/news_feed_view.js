@@ -12,7 +12,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				console.log(that.collection);
 				that._cleanse(function() {
 					var renderedContent = JST['news_feed_articles/list']({
-						articles: FR.Store.Articles
+						articles: that.collection
 					});
 					that.$el.html(renderedContent);
 				});
@@ -30,12 +30,14 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 						dataType: "JSONP",
 						url: that.request+article.get('url'),
 						success: function(embedly_data) {
+							console.log(success);
 							that._setThatEntryAttributes(embedly_data, article);
 							callback();
 						}
 				});
 			}
 		});
+		callback();
 	},
 
 	_setThatEntryAttributes: function(embedly_data, object){

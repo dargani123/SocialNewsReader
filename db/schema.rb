@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502181144) do
+ActiveRecord::Schema.define(:version => 20130503081555) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -74,14 +74,20 @@ ActiveRecord::Schema.define(:version => 20130502181144) do
   add_index "followers", ["user_id"], :name => "index_followers_on_user_id"
 
   create_table "news_feed_articles", :force => true do |t|
-    t.string   "like_count"
-    t.string   "comment_count"
     t.string   "time"
-    t.string   "link_id"
     t.string   "url"
     t.integer  "user_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "profile_image_url"
+    t.string   "name"
+    t.integer  "author_id"
+    t.string   "text"
+    t.integer  "score"
+    t.string   "score_criteria"
+    t.integer  "link_id"
+    t.string   "image_url"
+    t.string   "type"
   end
 
   create_table "users", :force => true do |t|

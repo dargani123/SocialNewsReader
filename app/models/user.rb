@@ -1,4 +1,5 @@
 require 'Thread'
+require 'json'
 
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
@@ -10,12 +11,13 @@ class User < ActiveRecord::Base
   
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
-  attr_accessible :provider, :uid
 
+  # after_save :updateTwitterFollowings	
 
+  	has_many :authentications
 	has_many :entries
 	has_many :feeds
-	has_many :authentications
+	has_many :database_authenticatableions
 	has_many :news_feed_articles
 	has_many :followings, :class_name => "Follower"
 
@@ -29,8 +31,6 @@ class User < ActiveRecord::Base
 	end
 
 	def password_required?
-		p "password required called"
-		p (authentications.empty? || !password.blank?) && super
 		(authentications.empty? || !password.blank?) && super
 	end
 
@@ -40,18 +40,6 @@ class User < ActiveRecord::Base
 	 else
 		 super
 	 end
-	end
-
-	def facebook_token 
-		authentications.where(provider: "facebook").first.token
-	end
-
-	def twitter_token
-		authentications.where(provider: "twitter").first.token
-	end
-
-	def secret_twitter_token 
-		authentications.where(provider: "twitter").first.token_secret
 	end
 
 	def facebook_friends 
@@ -75,56 +63,67 @@ class User < ActiveRecord::Base
 	end
 
 	def followingOnTwitter(ids=[])
-		client = Twitter::Client.new(
+		client = getTwitterClient
+		return client.friend_ids
+	end
+
+	def updateTwitterFeedStories 
+		if news_feed_articles.where(type: "TwitterArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
+			client = getTwitterClient
+			timeline = client.home_timeline(:count => 400, :include_entities => true)
+			timeline.each do |status|
+				insertTwitterArticle(status)
+			end
+		end
+	end
+
+	def getTwitterClient
+		return Twitter::Client.new(
 			:consumer_key => "SGgdy9uvxEHy9Ke7FMllg",
 			:consumer_secret => "48clrGvF9lTocZSVgLGoyguQqOKgnXjpGHHBFFhNQ",
 			:oauth_token => twitter_token,
 			:oauth_token_secret => secret_twitter_token
 		)
-		full = client.friends
-		f = client.friends(:skip_status => 1)
-		p "THIS IS THE FRIENDS OUTPUT"
-		p full
-		p "THIS IS THE HOMETIMELINE OUTPUT!!!!!"
-		p client.home_timeline(:count => 200, :include_entities => true)
 	end
 
 	def updateTwitterFollowings 
-		unless authentications.where(provider: "twitter").empty?
+		if linkedTwitter?
 			followingOnTwitter.each do |friend| 
-				TwitterFollower.create!(user_id: self.id, name: friend[:name], uid: friend[:id])
+				TwitterFollower.create!(user_id: self.id, uid: friend)
 			end
 		end
 	end 
 
 	def updateFacebookFollowings
 		graph = Koala::Facebook::API.new(facebook_token)
-		unless authentications.where(provider: "facebook").empty?
+		if linkedFacebook?
 			facebook_friends.each do |friend| 
 				FacebookFollower.create!(user_id: self.id, name: friend['name'], uid: friend['id'])
 			end 
 		end
-#graph.fql_query("SELECT url, owner, like_info, comment_info, created_time FROM link WHERE owner IN () AND created_time > (now() - 86400/2) ORDER BY created_time DESC")
 	end
 
 
-	def updateFacebookFeedStories
-		graph = Koala::Facebook::API.new(facebook_token)
-		friend_ids = facebook_friend_ids
-		threads = []
-		0.upto(20) do |i| 
-			threads << Thread.new { 
-					p "i: #{i}"
-					ids = []
-					index = (i*10)
-					1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-					query = "SELECT url, link_id, owner, like_info, comment_info, created_time FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"				
-					graph.fql_query(query) { |results| insertNewsFeedEntryifValid(results) }
-			}
+	def updateFacebookFeedStories ## move this to a background job.
+		if news_feed_articles.where(type: "FacebookArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "FacebookArticle").last.created_at 
+			graph = Koala::Facebook::API.new(facebook_token)
+			friend_ids = facebook_friend_ids
+			threads, results = [], []
+			start = Time.now()
+			0.upto(friend_ids.count/6) do |i| 
+				threads << Thread.new { 
+						ids = []	
+						index = (i*6) 
+						p "i: #{i}"
+
+						1.upto([5, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+						query = "SELECT url, link_id, owner, like_info, comment_info, created_time FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"				
+						graph.fql_query(query) {|result| results << result unless result.empty? }
+				}
+			end
+			threads.each { |aThread| aThread.join }
+			results.each { |result| insertFacebookArticle(result) }
 		end
-
-		threads.each { |aThread| aThread.join }
-
 	end
 
 	def post(params)
@@ -132,23 +131,66 @@ class User < ActiveRecord::Base
 		graph.put_connections("me", "links", :link => params['url'], :message => params['post'])
 	end 
 
+	def linkedFacebook?
+		authentications.where(provider: "facebook").count > 0
+	end
+
+	def linkedTwitter? 
+		authentications.where(provider: "facebook").count > 0
+	end
 
 	private 
-		def insertNewsFeedEntryifValid(results)
-			p "insert News"
-			p results
-			## must add news check here 
+		def insertFacebookArticle(results)
 			results.each do |result|
-			NewsFeedArticle.create!(
-				url: result['url'],
-				like_count: result['like_info']['like_count'],
-				comment_count: result['comment_info']['comment_count'],
+			FacebookArticle.create!( ## Missing profile_image_url and name 
+				author_id: result['owner'],
+				text: result['owner_comment'],
+				score: (result['like_info']['like_count'] + result['comment_info']['comment_count']),
+				score_criteria: { like_count: result['like_info']['like_count'], comment_count: result['comment_info']['comment_count'] }.to_json,
 				time: result['created_time'],
+				url: result['url'],
 				link_id: result['link_id'],
-				user_id: self.id
+				user_id: self.id,
+				image_url: result['image_url']
 			)
 			end
-
 		end
 
+		def insertTwitterArticle(status) ## missing image_url
+		 	if status.urls.size > 0
+				TwitterArticle.create( 
+					profile_image_url: status.profile_image_url,
+					name: status.user.name,
+					author_id: status.user.id,
+					text: status.text,
+					score: (status.retweet_count + status.favorite_count),
+					score_criteria: {retweet: status.retweet_count, favorites: status.favorite_count}.to_json,
+					time: status.created_at,
+					url: status.urls.first.expanded_url, 
+					link_id: status.id,
+					user_id: self.id
+				)
+			end
+		end
+
+		def isValidUrl?(url)
+			url.size > 0
+		end
+
+		def facebook_token 
+			authentications.where(provider: "facebook").first.token if linkedFacebook?
+		end
+
+		def twitter_token
+			authentications.where(provider: "twitter").first.token if linkedTwitter?
+		end
+
+		def secret_twitter_token 
+			authentications.where(provider: "twitter").first.token_secret if linkedTwitter?
+		end
 end
+		# graph.batch do |api|
+		# 	1.upto([5, friend_ids.count - index].min)  do |j| 
+		# 		graph.get_connections(friend_ids[j], "links") { |result| results << result}
+		# 	end	 
+		# end

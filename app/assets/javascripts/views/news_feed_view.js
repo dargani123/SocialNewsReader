@@ -14,7 +14,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 					var renderedContent = JST['news_feed_articles/list']({
 						articles: that.collection
 					});
-					that.$el.html(renderedContent);
+					that.$el.append(renderedContent);
 				});
 			}
 		});
@@ -30,7 +30,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 						dataType: "JSONP",
 						url: that.request+article.get('url'),
 						success: function(embedly_data) {
-							console.log(success);
+							console.log("success");
 							that._setThatEntryAttributes(embedly_data, article);
 							callback();
 						}

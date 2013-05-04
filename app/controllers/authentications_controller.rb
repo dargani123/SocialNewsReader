@@ -70,7 +70,7 @@ class AuthenticationsController < ApplicationController
        flash[:notice] = "Logged in."
        sign_in user
        # user.updateFacebookFollowings
-       user.updateFacebookFeedStories 
+       user.delay.updateFacebookFeedStories 
        redirect_to edit_user_registration_path
       else
        session[:omniauth] = omni.except('extra')

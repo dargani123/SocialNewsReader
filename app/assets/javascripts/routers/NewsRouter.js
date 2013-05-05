@@ -12,20 +12,25 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		"": "profilePage",
 		"entries": "feedEntriesIndex",
 		"followers": "requestFollowers",
-		"news_feed": "newsFeed"
+		"news_feed": "newsFeed",
+		"user_profiles/:id": "otherProfilePage"
 	}, 
 
 	profilePage: function() {
 		console.log("profile page");
 		var that = this; 
-		var entryView = new FR.Views.NewEntryView();
-		that.$rootEl.html(entryView.render().$el);
+		var entryView = new FR.Views.NewEntryView({
+
+		});
+		var search = new FR.Views.Search(); 
+		that.$rootEl.html(search.render().$el);
+		that.$rootEl.append(entryView.render().$el);
 	},
 
 	requestFollowers: function() {
 		var that = this;
-		var followerView = new FR.Views.FollowerView(); 
-		that.$rootEl.html(followerView.render().$el);
+		var search = new FR.Views.Search(); 
+		that.$rootEl.html(search.render().$el);
 	},
 
 	newsFeed: function() {
@@ -35,6 +40,30 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 			collection: FR.Store.Articles
 		}); 
 		that.$rootEl.html(newsFeedView.render().$el);
+	},
+
+	otherProfilePage: function(id) {
+		var that = this;
+		var search = new FR.Views.Search(); 
+		that.$rootEl.html(search.render().$el);
+
+		var otherProfilePageView; 
+
+		$.getJSON(
+			"/user_profiles/" + id, 
+			function(entries) {
+				console.log(entries);
+				otherProfilePageView = new FR.Views.OtherProfile({
+					collection: new FR.Collections.Entries(entries)
+				});
+			}
+		).done(
+			function(){
+				that.$rootEl.append(otherProfilePageView.render().$el);
+			}
+		);
+
+
 	}
 
 

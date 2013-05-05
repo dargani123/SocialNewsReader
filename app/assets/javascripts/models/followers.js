@@ -1,3 +1,3 @@
-FR.Models.Followers = Backbone.Model.extend({ 
+FR.Models.Follower = Backbone.Model.extend({ 
 	urlRoot: "/followers",
 });

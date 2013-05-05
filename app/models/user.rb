@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
 			friend_ids = facebook_friend_ids
 			threads, results = [], []
 			start = Time.now()
-			0.upto(30) do |i| 
+			0.upto(friend_ids.count/6-1) do |i| 
 				threads << Thread.new { 
 						ids = []	
 						index = (i*6) 
@@ -147,7 +147,8 @@ class User < ActiveRecord::Base
 				user_id: self.id,
 				image_url: result['picture'],
 				title: result['title'],
-				description: result['summary']
+				description: result['summary'],
+				name: facebook_friends.raw_response['data'].select { |f| f["id"] == result['owner'].to_s }.first['name']
 			)
 			end
 		end

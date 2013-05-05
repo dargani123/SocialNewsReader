@@ -1,16 +1,27 @@
 <ul>
 	<% articles.each( function(article) { %>
-		<li> <a href="<%=article.escape('url') %>"> 
-			<img src="<%= article.escape('image_url')%>" width='120' height='120'>
-			 Title of Article goes here </a> 
-		<button class="share-facebook" data-fb=<%=article.escape('link_id')%>>FB Share</button> 
-		<button class="share-twitter" data-twt=<%=article.escape('link_id')%>>Tweet</button> 
-			<small><div> description goes here </div></small>
-			<strong> <%= article.escape('text') %> </strong>
+		<li> 
+			<div> <a href="<%=article.escape('url') %>"> 
+				 <%= article.escape('title') %> </a> 
+			<strong> <div> <small> <small> <%= "Posted by: " + article.escape('name') %> </small> </small> </div> </strong>
+				<div> <img src="<%= article.escape('image_url')%>" width='120' height='120'> <div>
+			</div>
+			 <%= article.escape('text') %> 
+			 <br>
+			 <% score_criteria = jQuery.parseJSON(article.get('score_criteria')) %>  
+			 <% if(article.escape('type') === "TwitterArticle") {  %>
+				<small> <%= "Favorites: " + score_criteria.favorites + "," %> </small> 
+				<small> <%= "Retweets: " + score_criteria.retweet  %> </small>
+			 <% } else { %> 
+				<small> <%= "Likes: " + score_criteria.like_count + "," %> </small> 
+				<small> <%= "Comments: " + score_criteria.comment_count  %> </small>
+ 			 <% } %> 
+			<small><div> <%= article.escape('description') %> </div></small>
 		</li>  	
+		<br>
+		<br>
 
 	<% }); %> 
 
 </ul>
-
 

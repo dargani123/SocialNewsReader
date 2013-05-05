@@ -9,12 +9,12 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.collection.fetch({
 			success: function(){
 				console.log("success function of that.collection");
-				console.log(that.collection);
+				// console.log(that.collection);
 				that._cleanse(function() {
 					var renderedContent = JST['news_feed_articles/list']({
 						articles: that.collection
 					});
-					that.$el.append(renderedContent);
+					that.$el.html(renderedContent);
 				});
 			}
 		});
@@ -24,19 +24,24 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	_cleanse: function(callback) {
 		console.log("called");
 		var that = this;
-		that.collection.each(function(article) {
-			if (article.get('type') === "TwitterArticle") {
+		that.collection.each(function(article) { 
+				// console.log(article.get('title') === null);
+			if (article.get('type') === "TwitterArticle" && article.get('title') === null) {
+		
 				$.ajax({
-						dataType: "JSONP",
-						url: that.request+article.get('url'),
-						success: function(embedly_data) {
-							console.log("success");
+					dataType: "JSONP",
+					url: that.request+article.get('url'),
+					success: function(embedly_data) {
+						if (embedly_data.type !== "error"){
+							console.log(that.request+article.get('url'));
 							that._setThatEntryAttributes(embedly_data, article);
 							callback();
 						}
+					}		
 				});
-			}
+		    }
 		});
+		
 		callback();
 	},
 
@@ -45,6 +50,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 			object.set({title: embedly_data.title});
 			object.set({description: embedly_data.description}); 
 			object.set({image_url: that._largestPictureUrl(embedly_data)}); 
+			object.save();
 		return that.entry
 	},
 

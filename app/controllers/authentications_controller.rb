@@ -21,7 +21,6 @@ class AuthenticationsController < ApplicationController
   def twitter
     omni = request.env["omniauth.auth"]
     authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
-    
     if authentication
       flash[:notice] = "Logged in Successfully"
       sign_in_and_redirect User.find(authentication.user_id)      
@@ -33,6 +32,7 @@ class AuthenticationsController < ApplicationController
       sign_in_and_redirect current_user
     else
       user = User.new 
+      user.name = omni.info.name
       user.apply_omniauth(omni) 
       if user.save
        p "Twitter save true"
@@ -65,11 +65,10 @@ class AuthenticationsController < ApplicationController
       user = User.new 
       user.email = omni['extra']['raw_info']['email']
       user.apply_omniauth(omni)  
-      
+      user.name = omni.info.name
       if user.save 
        flash[:notice] = "Logged in."
        sign_in user
-       # user.updateFacebookFollowings
        user.delay.updateFacebookFeedStories 
        redirect_to edit_user_registration_path
       else

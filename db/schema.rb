@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130503221152) do
+ActiveRecord::Schema.define(:version => 20130505164258) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -66,9 +66,10 @@ ActiveRecord::Schema.define(:version => 20130503221152) do
     t.integer  "user_id"
     t.integer  "uid"
     t.string   "type"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "name"
+    t.integer  "following_id"
   end
 
   add_index "followers", ["user_id"], :name => "index_followers_on_user_id"
@@ -105,6 +106,7 @@ ActiveRecord::Schema.define(:version => 20130503221152) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "name"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

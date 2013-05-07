@@ -16,6 +16,8 @@ NewsReader::Application.routes.draw do
   resources :followers
   resources :news_feed_articles, :only => [:index, :create, :destroy, :update]
   resources :user_profiles, :only => [:index, :show]
+  resources :following_articles, :only => [:index] 
+  resources :reading_list_items, :only => [:index, :create, :destroy]
 
 
   # The priority is based upon order of creation:

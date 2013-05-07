@@ -36,10 +36,12 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	newsFeed: function() {
 		console.log("arrived at news feed method in router");
 		var that = this; 
+		var search = new FR.Views.Search(); 
+		that.$rootEl.html(search.render().$el);
 		var newsFeedView = new FR.Views.NewsFeedView({
 			collection: FR.Store.Articles
 		}); 
-		that.$rootEl.html(newsFeedView.render().$el);
+		that.$rootEl.append(newsFeedView.render().$el);
 	},
 
 	otherProfilePage: function(id) {
@@ -52,7 +54,7 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		$.getJSON(
 			"/user_profiles/" + id, 
 			function(entries) {
-				console.log(entries);
+				//console.log(entries);
 				otherProfilePageView = new FR.Views.OtherProfile({
 					collection: new FR.Collections.Entries(entries)
 				});

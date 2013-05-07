@@ -5,8 +5,12 @@ class UserProfilesController < ApplicationController
 		render :json => user.entries
 	end 
 
-	def index 
-		render :json => User.all
+	def index
+		users = []
+		User.all.each do |user|
+			users << {label: user.name, value: user.name, id: user.id}
+		end
+		render :json => users
 	end
 
 end

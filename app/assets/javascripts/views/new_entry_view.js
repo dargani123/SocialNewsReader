@@ -23,9 +23,16 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		var that = this;
 		var entry_id = $(ev.target).attr('data-twt');
 		that.entry = FR.Store.Entries.get(entry_id);
-		$("<textarea class='twitter-input'> </textarea>").insertAfter($(ev.target));
-		$('.twitter-input').val(that.entry.get('post'))	; 
-		$("<button class='submit-tweet'> Tweet Now! </button>").insertAfter($('.twitter-input'));			
+
+		if ($(".twitter-input").length > 0){
+			$('button.submit-tweet').remove();
+			$('.twitter-input').remove();
+		}
+		else {
+			$("<textarea class='twitter-input'> </textarea>").insertAfter($(ev.target));
+			$('.twitter-input').val(that.entry.get('post'))	; 
+			$("<button class='submit-tweet'> Tweet Now! </button>").insertAfter($('.twitter-input'));	
+		}		
 	},
 
 	sendTweet: function() {
@@ -48,9 +55,15 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		var entry_id = $(ev.target).attr('data-fb');
 		that.entry = FR.Store.Entries.get(entry_id);
 
-		$("<textarea class='fb-input'> </textarea>").insertAfter($(ev.target));
-		$('.fb-input').val(that.entry.get('post')); 
-		$("<button class='submit-fb'> Share Now! </button>").insertAfter($('.fb-input'));	
+		if ($(".fb-input").length > 0){
+			$('button.submit-fb').remove();
+			$('.fb-input').remove();
+		}
+		else {
+			$("<textarea class='fb-input'> </textarea>").insertAfter($(ev.target));
+			$('.fb-input').val(that.entry.get('post')); 
+			$("<button class='submit-fb'> Share Now! </button>").insertAfter($('.fb-input'));
+		}	
 	},	
 
 	sendFB: function() {
@@ -73,6 +86,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 			entries: FR.Store.Entries
 		});
 		that.$el.html(renderedContent);
+		that.$el.prepend($("<div><input class='entry-input' type='text' value='' placeholder='Share article here'></div>"));	
 		return that;
 	},
 

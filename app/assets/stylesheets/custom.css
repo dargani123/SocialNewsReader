@@ -32,8 +32,12 @@
 #follower-add {
      background-color: #34495E;
      color: white;
+}*/
+
+.follow {
+     float:right;
 }
-*/
+     
 
 
 .clearfix { display: inline-block; }

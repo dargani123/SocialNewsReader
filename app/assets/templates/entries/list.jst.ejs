@@ -1,12 +1,13 @@
 
-<div><input class="entry-input" type="text" value="" placeholder='Share article here'></div>	
+
 <ul>
 	<% entries.each( function(entry) { %>
 		<li> <a href=<%=entry.escape('url') %>> 
-			<img src=<%= entry.escape("image") %> width='120' height='120'>
+			<img src="<%= entry.escape('image') %>" width='120' height='120'>
 			<%= entry.escape('title') %> </a> 
 		<button class="share-facebook" data-fb=<%=entry.escape('id')%>>FB Share</button> 
 		<button class="share-twitter" data-twt=<%=entry.escape('id')%>>Tweet</button> 
+		<button class="add-reading-list" data-read=<%=entry.escape('id')%>>Add to Reading List</button>
 			<small><div> <%= entry.escape('description') %> </div></small>
 			<strong> <%= entry.escape('post') %> </strong>
 		</li>  	

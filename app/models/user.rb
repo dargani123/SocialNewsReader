@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
 	has_many :database_authenticatableions
 	has_many :news_feed_articles
 	has_many :followings, :class_name => "Follower"
+	has_many :reading_list_items
 
 
 	def apply_omniauth(omni)
@@ -102,20 +103,50 @@ class User < ActiveRecord::Base
 		if news_feed_articles.where(type: "FacebookArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "FacebookArticle").last.created_at 
 			graph = Koala::Facebook::API.new(facebook_token)
 			friend_ids = facebook_friend_ids
-			threads, results = [], []
-			start = Time.now()
-			0.upto(friend_ids.count/6-1) do |i| 
-				threads << Thread.new { 
+			threads1, threads2, threads3, results = [], [], [], []
+
+			0.upto(30) do |i| 
+				threads1 << Thread.new { 
 						ids = []	
-						index = (i*6) 
-						1.upto([6, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+						index = (i*10) 
+						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
 						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
 						p query 
 						graph.fql_query(query) {|result| results << result unless result.empty? }
 				}
 			end
-			threads.each { |aThread| aThread.join }
+
+			threads1.each { |aThread| aThread.join }
+
+			# (31).upto(60) do |i| 
+			# 	threads2 << Thread.new { 
+			# 			ids = []	
+			# 			index = (i*10) 
+			# 			1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+			# 			query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
+			# 			p query 
+			# 			graph.fql_query(query) {|result| results << result unless result.empty? }
+			# 	}
+			# end
+
+			# threads2.each { |aThread| aThread.join }
+
+			# (61).upto(90) do |i| 
+			# 	threads3 << Thread.new { 
+			# 			ids = []	
+			# 			index = (i*10) 
+			# 			1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+			# 			query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
+			# 			p query 
+			# 			graph.fql_query(query) {|result| results << result unless result.empty? }
+			# 	}
+			# end
+
+			# threads3.each { |aThread| aThread.join }
+
+			
 			results.each { |result| insertFacebookArticle(result) }
+
 		end
 	end 
 

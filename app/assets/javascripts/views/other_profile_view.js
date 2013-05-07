@@ -6,6 +6,9 @@ FR.Views.OtherProfile = Backbone.View.extend({
 		this.id = parseInt(document.URL.substring(document.URL.lastIndexOf('/') + 1));
 		$button.text(this._FollowButtonText());
 		this.$el.html($button);
+
+		// // // var listButton = new FR.Views.ReadingListButtonView();
+		// that.$el.append(listButton.render().$el);
 	},
 
 	_FollowButtonText: function(){
@@ -21,8 +24,14 @@ FR.Views.OtherProfile = Backbone.View.extend({
 	},
 
 	events: {
-		"click .follow": "follow"
+		"click .follow": "follow",
+		"click .add-reading-list": "addReadingList"
 	},	
+
+	addReadingList: function(ev){
+		var listButton = new FR.Views.ReadingListButtonView();
+		listButton.addToReadingList(ev);
+	},
 
 	render: function(){
 

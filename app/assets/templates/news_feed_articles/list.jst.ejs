@@ -1,9 +1,11 @@
 <h2> Trending on social! </h2>
 
+<a href="javascript:location.href;">my link</a>
+
 <ul>
 	<% articles.each( function(article) { %>
 		<li> 
-			<div class="add-reading-list-button"> <a href="<%=article.escape('url') %>"> 
+			<div> <a href="<%=article.escape('url') %>"> 
 				 <%= article.escape('title') %> </a> 
 			<strong> <div> <small> <small> <%= "Posted by: " + article.escape('name') %> </small> </small> </div> </strong>
 				<div> <img src="<%= article.escape('image_url')%>" width='120' height='120'> <div>

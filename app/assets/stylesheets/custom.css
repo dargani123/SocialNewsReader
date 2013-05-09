@@ -44,6 +44,7 @@
 
 .add-follower-input {
      float:right;
+     border: none;
 }
 
 .container-fluid {
@@ -55,7 +56,17 @@
 .follow {
      float:right;
 }
-     
+
+#logout-link {
+     float:right;
+}
+
+.add-reading-list {
+     background-color: #16A085;
+     color: white;
+     box-shadow: none;
+     border: none;
+}
 
 
 .clearfix { display: inline-block; }

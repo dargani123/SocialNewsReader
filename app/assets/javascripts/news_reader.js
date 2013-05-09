@@ -6,7 +6,7 @@ window.FR = {
 	Routers: {},
 	Store: {},
 
-	initialize: function ($content, feedsData, entriesData, followersData, articlesData, readingListData){	
+	initialize: function ($content, feedsData, entriesData, followersData, articlesData, readingListData, $navbar){	
 		FR.Store.Feeds = {};
 		FR.Store.Entries = new FR.Collections.Entries(entriesData);
 		FR.Store.Followers = new FR.Collections.Followers(followersData);
@@ -15,6 +15,7 @@ window.FR = {
 		// this.installSidebar($sidebar);
 
 		new FR.Routers.NewsRouter($content);
+		this.installNavbar($navbar);
 		Backbone.history.start();
 	},
 
@@ -23,5 +24,11 @@ window.FR = {
 		var sidebarView = new FR.Views.SidebarView();
 
 		$sidebar.html(sidebarView.render().$el);
+	},
+
+	installNavbar: function($navbar) {
+		var that = this; 
+		var navbar = new FR.Views.NavbarView(); 
+		$navbar.append(navbar.render().$el);
 	}
 };

@@ -11,5 +11,6 @@
  *= require_self
  *= require flat-ui
  *= require_tree .
+ *= require news_feed
  *= require custom
  */

@@ -1,12 +1,10 @@
 FR.Views.NewEntryView = Backbone.View.extend ({ 
-	// break into separate views? 
-	// 
 
 	initialize: function() {
 		var that = this;
 		this.request = "http://api.embed.ly/1/extract?key=f2e77f3d830e4cb28df18b29e0d07084&url=";
 		this.$entryDetailEl = $('<div class=entry-detail> </div>');
-		FR.Store.Entries.on('add', that.render, that);
+		that.collection.on('change', that.render, that);
 	},
 
 	events: {
@@ -22,7 +20,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	askForTweetText: function(ev) {
 		var that = this;
 		var entry_id = $(ev.target).attr('data-twt');
-		that.entry = FR.Store.Entries.get(entry_id);
+		that.entry = that.collection.get(entry_id);
 
 		if ($(".twitter-input").length > 0){
 			$('button.submit-tweet').remove();
@@ -53,7 +51,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	askForFacebookText: function(ev) { 	
 		var that = this;
 		var entry_id = $(ev.target).attr('data-fb');
-		that.entry = FR.Store.Entries.get(entry_id);
+		that.entry = that.collection.get(entry_id);
 
 		if ($(".fb-input").length > 0){
 			$('button.submit-fb').remove();
@@ -83,7 +81,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	render: function() {
 		var that = this;
 		var renderedContent = JST['entries/list']({
-			entries: FR.Store.Entries
+			entries: that.collection
 		});
 
 		that.$el.html(renderedContent);
@@ -111,7 +109,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		
 		that.entry.save({}, {
 			success: function() {
-				FR.Store.Entries.add(that.entry);
+				that.collection.add(that.entry);
 			}
 		});
 	},

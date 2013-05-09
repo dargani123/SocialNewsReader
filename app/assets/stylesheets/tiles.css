@@ -3,7 +3,7 @@
       font-weight: lighter;
       font-size: 15px; 
     }
-
+        
     .content-title {
       color: white;
       text-decoration: none;
@@ -23,7 +23,7 @@
       margin: 15px;
       padding-bottom: 0px;
       position: relative;
-      box-shadow:  1px 1px 1px #888888;
+      box-shadow:  2px 2px 2px #888888;
     }
 
     .text-content: {
@@ -43,7 +43,7 @@
     .content-box:hover {
       background: #4ECDC4;
       text-decoration: none;
-      box-shadow:  3px 3px 3px #888888;
+      box-shadow:  4px 4px 4px #888888;
       /*-webkit-transform: rotate(0.5deg);*/
     }
 
@@ -68,16 +68,15 @@
     }     
 
 
-    a { 
+    a.title { 
       color: white;
       text-decoration: none;
       text-shadow: none;
     }
 
-    a:hover { 
+    a.title:hover { 
       color: white;
     }
-
 
     .text-content p {
       color: white;

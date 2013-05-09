@@ -5,11 +5,11 @@ class TestBookmarkletsController < ApplicationController
 		fail
 	end 	
 
-	def index 
-		TestBookmarklet.create!(field: "successful!");
+	def index 	
 		if !current_user 
 			render :index
 		else
+			ReadingListItem.create!(user_id: current_user.id, url: params[:url], article_type: "bookmarklet");
 			render :nothing => true 
 		end
 	end

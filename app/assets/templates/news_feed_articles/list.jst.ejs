@@ -1,29 +1,3 @@
-<h2> Trending on social! </h2>
-
-<!-- <a href="javascript:
-var script = document.createElement('script');
-script.src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js';
-
-script.onload = function() { 
-  console.log('loaded');
-  $.ajax({
-    url: 'http://localhost:3000/test_bookmarklets', 
-    type: 'GET',
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader(
-        'X-CSRF-Token', 
-        $('meta[name=\'csrf-token\']').attr('content')
-      );
-    }, 
-    data: {test: 1},
-    success: function() { console.log('wow') }
-  });
-};
-
-document.getElementsByTagName('head')[0].appendChild(script);
-">my link</a>
- -->
-
 <a href="javascript:
 
   console.log('loaded');
@@ -33,38 +7,40 @@ document.getElementsByTagName('head')[0].appendChild(script);
   document.getElementsByTagName('body')[0].appendChild(iframe);  
 
 ">my link</a>
-
-
-
-<!--  document.ready.ajax({url: '/test', type: 'POST',beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name='csrf-token']').attr('content'))}, data: {test: 1}, success: function() { console.log('wow')} }); -->
-
-<ul>
-  <% articles.each( function(article) { %>
-    <li> 
-      <div> <a href="<%=article.escape('url') %>"> 
-         <%= article.escape('title') %> </a> 
-      <strong> <div> <small> <small> <%= "Posted by: " + article.escape('name') %> </small> </small> </div> </strong>
-        <div> <img src="<%= article.escape('image_url')%>" width='120' height='120'> <div>
+<% articles.each( function(article) { %>
+<div class="span8 offset2 panel">
+    <div class="span4 left-side"> 
+      <div class="news_feed">
+        <div class="social_img"> <img src="<%= article.escape('image_url')%>"> </div>
+        <div>
+        </div>
       </div>
-      <button class="add-reading-list" data-article-id="<%=article.get('link_id')%>" data-type="<%=article.get('type')%>">
+    </div>
+
+    <div class="span8 right-side">
+      <div> <a class="title-post" href="<%=article.escape('url') %>"> 
+       <%= article.escape('title') %> </a> 
+     </div>
+     <div class="post">
+      <div class="postname"> <%= "Posted by: " + article.escape('name') %> </div> 
+      <div class="posttext"> <%= article.escape('text') %> </div> 
+      <img src='/fb_button.png' class="share-facebook" data-fb=<%=article.escape('id')%> >
+      <img src='/tweet.png' class="share-twitter" data-twt=<%=article.escape('id')%>>
+      <button class="add-reading-list readingpost" data-article-id="<%=article.get('link_id')%>" data-type="<%=article.get('type')%>">
         <%= FR.Store.ReadingList.where({article_id: parseInt(article.escape('link_id')), article_type: article.escape('type')}).length > 0 ? "On Reading List" : "Add Reading List" %>
       </button>
-       <%= article.escape('text') %> 
-       <br>
-       <% score_criteria = jQuery.parseJSON(article.get('score_criteria')) %>  
-       <% if(article.escape('type') === "TwitterArticle") {  %>
-        <small> <%= "Favorites: " + score_criteria.favorites + "," %> </small> 
-        <small> <%= "Retweets: " + score_criteria.retweet  %> </small>
-       <% } else { %> 
-        <small> <%= "Likes: " + score_criteria.like_count + "," %> </small> 
-        <small> <%= "Comments: " + score_criteria.comment_count  %> </small>
-       <% } %> 
-      <small><div> <%= article.escape('description') %> </div></small>
-    </li>   
-    <br>
-    <br>
+      <div class="score_criteria">
+        <% score_criteria = jQuery.parseJSON(article.get('score_criteria')) %>  
+        <% if(article.escape('article_type') === "TwitterArticle") {  %>
+        <%= "Favorites: " + score_criteria.favorites + "," %>  
+        <%= "Retweets: " + score_criteria.retweet  %> 
+        <% } else { %> 
+        <%= "Likes: " + score_criteria.like_count + "," %> 
+        <%= "Comments: " + score_criteria.comment_count  %>
+        <% } %> 
+      </div>
+    </div>
+  </div>
+</div>
 
-  <% }); %> 
-
-</ul>
-
+<% }); %> 

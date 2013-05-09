@@ -3,7 +3,9 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		var that = this;
 		that.$rootEl = $rootEl;
 		console.log("initialize of the router");
-		var entryView = new FR.Views.NewEntryView();
+		var entryView = new FR.Views.NewEntryView({
+			collection: FR.Store.Entries	
+		});
 		that.$rootEl.html(entryView.render().$el);
 		Backbone.history.navigate("#followers", {trigger: true});
 	},
@@ -13,14 +15,16 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		"entries": "feedEntriesIndex",
 		"followers": "requestFollowers",
 		"news_feed": "newsFeed",
-		"user_profiles/:id": "otherProfilePage"
+		"user_profiles/:id": "otherProfilePage",
+		"reading_list" : "readingList"
 	}, 
 
 	profilePage: function() {
 		console.log("profile page");
 		var that = this; 
+		console.log(FR.Store.Entries);
 		var entryView = new FR.Views.NewEntryView({
-
+			collection: FR.Store.Entries
 		});
 		var search = new FR.Views.Search(); 
 		that.$rootEl.html(search.render().$el);
@@ -43,7 +47,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	},
 
 	newsFeed: function() {
-		console.log("arrived at news feed method in router");
 		var that = this; 
 		var search = new FR.Views.Search(); 
 		that.$rootEl.html(search.render().$el);
@@ -75,7 +78,21 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		);
 
 
+	},
+
+	readingList: function() {
+		var that = this;
+		FR.Store.ReadingList.fetch();
+
+		var readingListView = new FR.Views.ReadingListView({
+			collection: FR.Store.ReadingList
+		});
+
+
+		that.$rootEl.html(readingListView.render().$el);
 	}
+
+
 
 
 

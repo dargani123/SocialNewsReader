@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
 	has_many :news_feed_articles
 	has_many :followings, :class_name => "Follower"
 	has_many :reading_list_items
+	
 
 
 	def apply_omniauth(omni)

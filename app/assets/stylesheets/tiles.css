@@ -1,0 +1,98 @@
+  body {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: lighter;
+      font-size: 15px; 
+    }
+
+    .content-title {
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #text-navbar {
+     color: white;
+     text-shadow: none;
+    }
+
+    .content-box {
+      width: 360px;
+      background: #7F8C8D;
+      float: left;
+      margin: 15px;
+      padding-bottom: 0px;
+      position: relative;
+      box-shadow:  1px 1px 1px #888888;
+    }
+
+    .text-content: {
+      opacity: .2;
+    }
+
+    .share-facebook{
+     width: 25px;
+     height: 25px;
+    }
+
+     .share-twitter{
+     width: 25px;
+     height: 25px;
+    }
+
+    .content-box:hover {
+      background: #4ECDC4;
+      text-decoration: none;
+      box-shadow:  3px 3px 3px #888888;
+      /*-webkit-transform: rotate(0.5deg);*/
+    }
+
+    .content-box .content-image {
+      width: 100%;
+    }
+
+    .text-content {
+      padding: 10px 10px 10px;
+      padding-bottom: 30px;
+
+    }
+
+    .share-button {
+      background: rgb(200,100,0);
+      color: white;
+      text-decoration: none;
+      padding: 15px 15px;
+      float: right;
+      position: relative;
+      top: -10px;
+    }     
+
+
+    a { 
+      color: white;
+      text-decoration: none;
+      text-shadow: none;
+    }
+
+    a:hover { 
+      color: white;
+    }
+
+
+    .text-content p {
+      color: white;
+      line-height: 1.5em;
+      font-size: 10px;
+    }
+
+    .content-share {
+      position: relative;
+      margin-top: 10px;
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+    }
+
+    .clearfix {
+      clear: both;
+    }

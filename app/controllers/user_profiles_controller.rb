@@ -14,3 +14,4 @@ class UserProfilesController < ApplicationController
 	end
 
 end
+#### Fix the above, change up on the client side

@@ -114,7 +114,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		var array_pics = embedly_data.images;
 
 		var url = "";
-
+		
 		if(array_pics.length === 0)
 			url = embedly_data.favicon_url
 		else {

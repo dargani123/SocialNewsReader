@@ -5,6 +5,8 @@ FR.Views.Search = Backbone.View.extend ({
 		var $input = $("<input class='add-follower-input todo-search' id='follower-add' type='text' value='' placeholder='Search'>");	
 		that.$el.html($input);
 
+
+
 		$input.autocomplete({
 			source: "/user_profiles?term-name",
 			minLength: 2,

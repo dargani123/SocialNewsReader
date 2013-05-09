@@ -12,8 +12,8 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 	events: {
 		"input input.entry-input": "showLinkAttributes",
 		"click button.submit-post": "postEntry",
-		"click button.share-facebook": "askForFacebookText",
-		"click button.share-twitter": "askForTweetText",
+		"click img.share-facebook": "askForFacebookText",
+		"click img.share-twitter": "askForTweetText",
 		"click button.share": "batchShare",
 		"click button.submit-tweet": "sendTweet",
 		"click button.submit-fb": "sendFB"
@@ -85,7 +85,9 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		var renderedContent = JST['entries/list']({
 			entries: FR.Store.Entries
 		});
+
 		that.$el.html(renderedContent);
+
 		that.$el.prepend($("<div><input class='entry-input' type='text' value='' placeholder='Share article here'></div>"));	
 		return that;
 	},

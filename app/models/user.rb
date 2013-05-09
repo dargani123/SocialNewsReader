@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
 
 			0.upto(30) do |i| 
 				threads1 << Thread.new { 
-						ids = []	
+						ids = []
 						index = (i*10) 
 						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
 						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"

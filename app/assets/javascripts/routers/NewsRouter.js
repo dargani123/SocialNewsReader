@@ -25,6 +25,15 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		var search = new FR.Views.Search(); 
 		that.$rootEl.html(search.render().$el);
 		that.$rootEl.append(entryView.render().$el);
+
+		var $container = $('.masonrycontainer');
+	      $container.imagesLoaded(function(){
+	        $container.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 390,
+	          isAnimated: true
+	        });
+	      });
 	},
 
 	requestFollowers: function() {

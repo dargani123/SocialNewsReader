@@ -1,6 +1,7 @@
 
+
 <div class="row-fluid">
-  <div id="content" style="float: left;" class="span12"></div> 
+  <div id="content"></div> 
 </div>
 
   <%- User.omniauth_providers.each do |provider| %>
@@ -8,6 +9,7 @@
       <%= link_to "Connect your #{provider.to_s.titleize}", omniauth_authorize_path(current_user, provider) %><br />
     <% end %> 
   <% end -%>
+
 
 
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>

@@ -1,25 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<p class="notice"><%= notice %></p>
-	<p class="alert"><%= alert %></p>
+<!-- 	<p class="notice"><%= notice %></p>
+	<p class="alert"><%= alert %></p> -->
 
   <title>NewsReader</title>
+ 
+
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <div class="navbar">
+    <div class="container"> 
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+          <ul class="nav">
+            <li>
+              <a href="#">
+                Menu Item
+                <span class="navbar-unread">1</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="#">
+                Messages
+                <span class="navbar-unread">1</span>
+              </a>
+              <ul>
+                <li><a href="#">Element One</a></li>
+                <li>
+                  <a href="#">Sub menu</a>
+                  <ul>
+                    <li><a href="#">Element One</a></li>
+                    <li><a href="#">Element Two</a></li>
+                    <li><a href="#">Element Three</a></li>
+                  </ul> 
+                </li>
+                <li><a href="#">Element Three</a></li>
+              </ul> 
+            </li>
+            <li>
+              <a href="#">
+                About Us
+                <span class="navbar-unread">1</span>
+              </a>
+            </li>
+          </ul>
+      </div>
+    </div>
+
 <div class='container-fluid clearfix'> 
-	<div class='well clearfix'>
-
-<%= yield %>
-
-	</div>
+<%= yield %>  
 </div>
 
 
+
+<%= link_to "sign out", destroy_user_session_url, method: :delete%> 
+
 </body>
 
-<%= user_signed_in? ? link_to( "Sign Out", destroy_user_session_url, method: :delete) : link_to("Sign In", new_user_session_url)%> 
 </html>

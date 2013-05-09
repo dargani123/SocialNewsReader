@@ -1,21 +1,24 @@
+<div class="masonrycontainer span12">
 
-
-<ul>
-	<% entries.each( function(entry) { %>
-		<li> <a href=<%=entry.escape('url') %>> 
-			<img src="<%= entry.escape('image') %>" width='120' height='120'>
-			<%= entry.escape('title') %> </a> 
-		
-			<button class="share-facebook" data-fb=<%=entry.escape('id')%>>FB Share</button> 
-			<button class="share-twitter" data-twt=<%=entry.escape('id')%>>Tweet</button> 
-			<button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
-				<%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
-			</button>			
-			
-			<small><div> <%= entry.escape('description') %> </div></small>
-			<strong> <%= entry.escape('post') %> </strong>
-		</li>  	
-
-	<% }); %> 
-</ul>
-
+    <% entries.each( function(entry) { %>
+    <div class="content-box">
+      <div class="text-content">
+        <div class="content-title">
+          <a href=<%=entry.escape('url') %>> 
+          <%= entry.escape('title') %> </a>
+        </div> 
+        <div class="content-share">   
+          <img src='/fb_button.png' class="share-facebook" data-fb=<%=entry.escape('id')%> >
+          <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.escape('id')%>>
+          <button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
+          <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
+          </button>   
+          <br class="clearfix" />
+        </div>
+        <strong> <%= entry.escape('post') %> </strong>
+      </div>
+      <img src="<%= entry.escape('image') %>" class="content-image">
+  </div>
+  <% }); %> 
+  </div>
+</div>

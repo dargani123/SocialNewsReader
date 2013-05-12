@@ -119,31 +119,31 @@ class User < ActiveRecord::Base
 
 			threads1.each { |aThread| aThread.join }
 
-			# (31).upto(60) do |i| 
-			# 	threads2 << Thread.new { 
-			# 			ids = []	
-			# 			index = (i*10) 
-			# 			1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-			# 			query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
-			# 			p query 
-			# 			graph.fql_query(query) {|result| results << result unless result.empty? }
-			# 	}
-			# end
+			(31).upto(60) do |i| 
+				threads2 << Thread.new { 
+						ids = []	
+						index = (i*10) 
+						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
+						p query 
+						graph.fql_query(query) {|result| results << result unless result.empty? }
+				}
+			end
 
-			# threads2.each { |aThread| aThread.join }
+			threads2.each { |aThread| aThread.join }
 
-			# (61).upto(90) do |i| 
-			# 	threads3 << Thread.new { 
-			# 			ids = []	
-			# 			index = (i*10) 
-			# 			1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-			# 			query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
-			# 			p query 
-			# 			graph.fql_query(query) {|result| results << result unless result.empty? }
-			# 	}
-			# end
+			(61).upto(90) do |i| 
+				threads3 << Thread.new { 
+						ids = []	
+						index = (i*10) 
+						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
+						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
+						p query 
+						graph.fql_query(query) {|result| results << result unless result.empty? }
+				}
+			end
 
-			# threads3.each { |aThread| aThread.join }
+			threads3.each { |aThread| aThread.join }
 
 			
 			results.each { |result| insertFacebookArticle(result) }

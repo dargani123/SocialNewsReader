@@ -14,6 +14,7 @@ window.FR = {
 		FR.Store.ReadingList = new FR.Collections.ReadingList(readingListData);
 		// this.installSidebar($sidebar);
 
+
 		new FR.Routers.NewsRouter($content);
 		this.installNavbar($navbar);
 		Backbone.history.start();

@@ -5,28 +5,21 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log("render called");
+		console.log("render called: reading list button view");
 		return this;
 	},
 
 	_onReadingList: function(link_id, type) {
-		console.log("article_id ", link_id);
-		console.log("type ", type);
-		console.log("inside _onReadingList");
 		return FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type}).length > 0
 	},
 
-	addToReadingList: function(ev) {	
-		console.log("addToReadingList Button Pressed");
+	addToReadingList: function(ev, entry_collection) {	
 		var link_id = $(ev.target).attr('data-article-id');
 		var type = $(ev.target).attr('data-type');
 		var that = this;
 
-		console.log("On reading list output: ", that._onReadingList(link_id, type));
-
-
 		if (!that._onReadingList(link_id, type)) {
-			console.log("not on the reading list");
+			console.log("adding item");
 			var list_item = new FR.Models.ReadingListItem({
 				article_id: link_id,
 				article_type: type,
@@ -39,15 +32,27 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 					FR.Store.ReadingList.add(list_item);
 				}
 			});
+
+			// if(type === "follower") {
+			// 	var entry = entry_collection.where({id: parseInt(link_id)})[0];
+			// 	FR.Store.ReadingListEntries.add(entry);
+			// }	
+
 			$(ev.target).text("On Reading List");
 		} else {
+			console.log("destroying item");
 			var item = FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type})[0];
-			console.log("item ", item);
 			item.destroy({
 				success: function() {
 					$(ev.target).text("Add to Reading List");
+					// if(type === "follower") {
+					// 	entry = entry_collection.where({id: parseInt(link_id) })[0];
+					// 	FR.Store.ReadingListEntries.remove(entry);
+					// }	
 				} 
 			});
+
+
 		} 	
 
 	},

@@ -3,7 +3,7 @@
       font-weight: lighter;
       font-size: 15px; 
     }
-        
+
     .content-title {
       color: white;
       text-decoration: none;
@@ -20,7 +20,7 @@
       width: 360px;
       background: #7F8C8D;
       float: left;
-      margin: 15px;
+      margin: 10px;
       padding-bottom: 0px;
       position: relative;
       box-shadow:  2px 2px 2px #888888;

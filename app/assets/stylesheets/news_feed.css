@@ -2,14 +2,9 @@
 	border: 30px;
 }
 
-.social_img {
+img.news_feed {
 	width: 100%;
-	max-height: 100%;
 	padding-top: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	display: inline;
-
 }
 
 .right-side {

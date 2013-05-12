@@ -4,10 +4,11 @@ class NewsFeedArticlesController < ApplicationController
 		current_user.updateTwitterFeedStories if current_user.linkedTwitter?
 		current_user.updateFacebookFeedStories if current_user.linkedFacebook?
 		start = 5 * params[:page].to_i
-		render :json => current_user.news_feed_articles
-									.sort_by(&:time)
-									.reverse[start..start+5]
+		# render :json => current_user.news_feed_articles
+									# .sort_by(&:time)
+									# .reverse[start..start+5]
 
+		render :json => current_user.news_feed_articles
 		### NEED TO LOOK AT THIS SORT BY AND DO IT SMARTER. 12 hours, then by score. 
 	end
 

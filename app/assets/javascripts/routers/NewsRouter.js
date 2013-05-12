@@ -22,22 +22,26 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	profilePage: function() {
 		console.log("profile page");
 		var that = this; 
-		console.log(FR.Store.Entries);
+
 		var entryView = new FR.Views.NewEntryView({
 			collection: FR.Store.Entries
 		});
+
 		var search = new FR.Views.Search(); 
 		that.$rootEl.html(search.render().$el);
 		that.$rootEl.append(entryView.render().$el);
 
 		var $container = $('.masonrycontainer');
+		console.log("here");
 	      $container.imagesLoaded(function(){
 	        $container.masonry({
 	          itemSelector : '.content-box',
-	          columnWidth : 390,
+	          columnWidth : 380,
 	          isAnimated: true
 	        });
 	      });
+
+
 	},
 
 	requestFollowers: function() {
@@ -50,9 +54,24 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		var that = this; 
 		var search = new FR.Views.Search(); 
 		that.$rootEl.html(search.render().$el);
+
 		var newsFeedView = new FR.Views.NewsFeedView({
 			collection: FR.Store.Articles
 		}); 
+
+		console.log("news feed view collection" , newsFeedView.collection);
+		console.log("page #", newsFeedView.page);
+
+		FR.Store.Articles.fetch({ // rails or	]der does not matter here, need to sort it in the client side
+			success: function(articles){
+				newsFeedView._cleanse();
+				newsFeedView.page++; 
+			}
+		});
+
+
+		newsFeedView._addFollowingsArticle(that.$rootEl);
+
 		that.$rootEl.append(newsFeedView.render().$el);
 	},
 
@@ -74,6 +93,15 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		).done(
 			function(){
 				that.$rootEl.append(otherProfilePageView.render().$el);
+
+				var $container = $('.masonrycontainer');
+				$container.imagesLoaded(function(){
+					$container.masonry({
+						itemSelector : '.content-box',
+						columnWidth : 380,
+						isAnimated: true
+					});
+				});
 			}
 		);
 
@@ -82,13 +110,11 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 
 	readingList: function() {
 		var that = this;
-		FR.Store.ReadingList.fetch();
 
 		var readingListView = new FR.Views.ReadingListView({
 			collection: FR.Store.ReadingList
 		});
-
-
+		
 		that.$rootEl.html(readingListView.render().$el);
 	}
 

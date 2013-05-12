@@ -11,17 +11,17 @@
 <div class="span8 offset2 panel">
     <div class="span4 left-side"> 
       <div class="news_feed">
-        <div class="social_img"> <img src="<%= article.escape('image_url')%>"> </div>
+        <div class="social_img"> <img class="news_feed" src="<%= article.escape('image_url')%>"> </div>
         <div>
         </div>
       </div>
     </div>
 
     <div class="span8 right-side">
+     <div class="post">
       <div> <a class="title-post" href="<%=article.escape('url') %>"> 
        <%= article.escape('title') %> </a> 
      </div>
-     <div class="post">
       <div class="postname"> <%= "Posted by: " + article.escape('name') %> </div> 
       <div class="posttext"> <%= article.escape('text') %> </div> 
       <img src='/fb_button.png' class="share-facebook" data-fb=<%=article.escape('id')%> >
@@ -31,7 +31,7 @@
       </button>
       <div class="score_criteria">
         <% score_criteria = jQuery.parseJSON(article.get('score_criteria')) %>  
-        <% if(article.escape('article_type') === "TwitterArticle") {  %>
+        <% if(article.escape('article_type') === "TwitterArticle" || article.escape('type') === "TwitterArticle" ) {  %>
         <%= "Favorites: " + score_criteria.favorites + "," %>  
         <%= "Retweets: " + score_criteria.retweet  %> 
         <% } else { %> 

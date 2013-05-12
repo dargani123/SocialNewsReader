@@ -1,24 +1,21 @@
 FR.Views.NewsFeedView = Backbone.View.extend({
 	initialize: function() {
 		var that = this; 
-		that.request = "http://api.embed.ly/1/extract?key=f2e77f3d830e4cb28df18b29e0d07084&url=";
-		that.page = 1; 
+		that.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
+		that.page = 0; 
 		that.rendering = false;
-		console.log(($(window).scrollTop() + $(window).height() == $(document).height()) && !that.rendering);
+		// console.log(($(window).scrollTop() + $(window).height() == $(document).height()));
 		
 		var throttled = _.throttle(function() {
-	   		if (($(window).scrollTop() + $(window).height() == $(document).height()) && !that.rendering) {
-		   		that.$el.append("<div class='load'>Loading</div>")
+
+	   		if (($(window).scrollTop() + $(window).height() > $(document).height())) {
 	   			that.render(); 
 	   		}
 		}, 50);
 
 		$(window).scroll(throttled);
-
-		that._addFollowingsArticle(); 
-
 		that.$socialFeed = $("<div class='SocialFeed'>");
-		that._insertSeedSocial();
+		that.collection.on('add-reading-list', that.render, that);
 	},
 
 	events: {
@@ -32,34 +29,19 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 
 	render: function() {
 		var that = this; 
+		
+		collection = new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)));
 
-		// CLEAN UP CODE HERE
-		that.rendering = true;
-
-		that.collection.fetch({ // rails or	]der does not matter here, need to sort it in the client side
-			data: {page: that.page},
-			success: function(articles){
-				that._cleanse(function() {
-					var renderedContent = JST['news_feed_articles/list']({
-						articles: articles
-					});
-					that.$socialFeed.append(renderedContent);
-				});
-
-				that.page++; 
-				that.rendering = false;
-				$('.load').remove();
-			}
+		var renderedContent = JST['news_feed_articles/list']({
+			articles: new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)))
 		});
+		that.page++;
+
+		that.$el.append(renderedContent); 
 		return that;
 	},
 
-	_insertSeedSocial: function(){
-		var that = this;
-		that.$el.append(that.$socialFeed);
-	},
-
-	_addFollowingsArticle: function() {
+	_addFollowingsArticle: function($rootEl) {
 		var that = this; 
 
 		$.ajax({url: "/following_articles", 
@@ -71,7 +53,8 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 					entries: followingEntries
 				});
 				
-				that.$el.prepend(content);			
+				that.$socialFeed.html(content);		
+				$rootEl.append(that.$socialFeed);	
 			}
 		});	
 
@@ -90,14 +73,12 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 						if (embedly_data.type !== "error"){
 							console.log(that.request+article.get('url'));
 							that._setThatEntryAttributes(embedly_data, article);
-							callback();
 						}
 					}		
 				});
 		    }
 		});
-		
-		callback();
+
 	},
 
 	_setThatEntryAttributes: function(embedly_data, object){

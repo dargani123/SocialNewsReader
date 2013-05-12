@@ -2,9 +2,10 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 
 	initialize: function() {
 		var that = this;
-		this.request = "http://api.embed.ly/1/extract?key=f2e77f3d830e4cb28df18b29e0d07084&url=";
+		this.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
 		this.$entryDetailEl = $('<div class=entry-detail> </div>');
-		that.collection.on('change', that.render, that);
+		that.collection.on('add', that.render, that);
+		console.log("Collection for New Entry View", that.collection);
 	},
 
 	events: {
@@ -80,6 +81,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 
 	render: function() {
 		var that = this;
+
 		var renderedContent = JST['entries/list']({
 			entries: that.collection
 		});
@@ -87,6 +89,16 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		that.$el.html(renderedContent);
 
 		that.$el.prepend($("<div><input class='entry-input' type='text' value='' placeholder='Share article here'></div>"));	
+		
+		var $container = $('.masonrycontainer');
+	      $container.imagesLoaded(function(){
+	        $container.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 380,
+	          isAnimated: true
+	        });
+	    });
+
 		return that;
 	},
 
@@ -103,13 +115,14 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		}
 	},
 
-	postEntry: function() {
+	postEntry: function() {	
 		var that = this;
 		that.entry.set({post: $('.Post').val()});
 		
 		that.entry.save({}, {
 			success: function() {
 				that.collection.add(that.entry);
+
 			}
 		});
 	},
@@ -133,6 +146,7 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 
 	_setThatEntryAttributes: function(embedly_data){
 		var that = this;
+		console.log(embedly_data);
 		that.entry = new FR.Models.Entry({
 			title: embedly_data.title,
 			description: embedly_data.description, 

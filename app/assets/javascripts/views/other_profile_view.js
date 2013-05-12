@@ -30,7 +30,7 @@ FR.Views.OtherProfile = Backbone.View.extend({
 
 	addReadingList: function(ev){
 		var listButton = new FR.Views.ReadingListButtonView();
-		listButton.addToReadingList(ev);
+		listButton.addToReadingList(ev, this.collection);
 	},
 
 	render: function(){
@@ -40,6 +40,15 @@ FR.Views.OtherProfile = Backbone.View.extend({
 		});
 
 		this.$el.append(renderedContent);
+
+		var $container = $('.masonrycontainer');
+	      $container.imagesLoaded(function(){
+	        $container.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 380,
+	          isAnimated: true
+	        });
+	    });
 
 		return this; 
 	}, 

@@ -7,6 +7,9 @@ FR.Views.NavbarView = Backbone.View.extend ({
 		var renderedContent = JST['navbar'](); 
 
 		that.$el.html(renderedContent);
+		// var search = FR.Views.Search();
+		// that.$el.append(search.render().$el);
+
 		return that; 
 	}
 

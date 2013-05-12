@@ -22,6 +22,9 @@
    text-shadow: none;  
 }
 
+.entry-input {
+     margin-left: 50px;
+}
 .navbar .nav > li > a {
      text-shadow: none;
      color: white;
@@ -45,6 +48,7 @@
 .add-follower-input {
      float:right;
      border: none;
+     margin-right: 50px;
 }
 
 .container-fluid {

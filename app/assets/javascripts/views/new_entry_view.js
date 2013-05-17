@@ -5,7 +5,6 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 		this.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
 		this.$entryDetailEl = $('<div class=entry-detail> </div>');
 		that.collection.on('add', that.render, that);
-		console.log("Collection for New Entry View", that.collection);
 	},
 
 	events: {
@@ -86,9 +85,17 @@ FR.Views.NewEntryView = Backbone.View.extend ({
 			entries: that.collection
 		});
 
-		that.$el.html(renderedContent);
+		// that.collection.each(function(entry) {
+		// 	var renderedContent = JST['entries/user_entry_list_item']({
+		// 		entry: entry
+		// 	});
 
+		// 	that.$el.append(renderedContent);
+		// });
+
+		that.$el.html(renderedContent);
 		that.$el.prepend($("<div><input class='entry-input' type='text' value='' placeholder='Share article here'></div>"));	
+
 		
 		var $container = $('.masonrycontainer');
 	      $container.imagesLoaded(function(){

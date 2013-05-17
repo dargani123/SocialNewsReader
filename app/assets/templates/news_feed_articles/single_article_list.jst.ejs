@@ -1,13 +1,3 @@
-<a href="javascript:
-
-  console.log('loaded');
-  var iframe = document.createElement('iframe');
-  iframe.src = 'http://localhost:3000/test_bookmarklets?url=' + document.location;
-  iframe.style = 'z-index: 2147483000';
-  document.getElementsByTagName('body')[0].appendChild(iframe);  
-
-">my link</a>
-<% articles.each( function(article) { %>
 <div class="row">
   <div class="span8 offset2 panel">
       <div class="span4 left-side"> 
@@ -44,5 +34,3 @@
     </div>
   </div>
 </div>
-
-<% }); %> 

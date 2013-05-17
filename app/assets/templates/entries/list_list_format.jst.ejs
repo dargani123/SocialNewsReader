@@ -1,0 +1,28 @@
+<% entries.each( function(entry) { %>
+<div class="row">
+  <div class="span8 offset2 panel">
+      <div class="span4 left-side"> 
+        <div class="news_feed">
+          <div class="social_img"> <img class="news_feed" src="<%= entry.escape('image')%>"> </div>
+          <div>
+          </div>
+        </div>
+      </div>
+
+      <div class="span8 right-side">
+       <div class="post">
+        <div> <a class="title-post" href="<%=entry.escape('url') %>"> 
+         <%= entry.escape('title') %> </a> 
+       </div>
+        <div class="postname"> <%= "Posted by: " + "NEED TO FIX" %> </div> 
+        <div class="posttext"> <%= entry.escape('post') %> </div> 
+        <img src='/fb_button.png' class="share-facebook" data-fb=<%=entry.escape('id')%> >
+        <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.escape('id')%>>
+        <button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
+        <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
+        </button>  
+      </div>
+    </div>
+  </div>
+</div>
+<% }); %> 

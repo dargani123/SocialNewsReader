@@ -25,9 +25,9 @@ FR.Views.ReadingListView = Backbone.View.extend({
 					data: {article_id: list_item.get('article_id')},
 					success: function(entry_data) {
 						var entry = new FR.Models.Entry(entry_data);
-						console.log("This was the entry that was fetched, model", entry);
+						// console.log("This was the entry that was fetched, model", entry);
 						entryToRender = new FR.Collections.Entries([entry]);
-						console.log("This is the collection that is crreated, colleciton ", entryToRender);
+						// console.log("This is the collection that is crreated, colleciton ", entryToRender);
 
 						entryView = new FR.Views.NewEntryView({
 							collection: entryToRender

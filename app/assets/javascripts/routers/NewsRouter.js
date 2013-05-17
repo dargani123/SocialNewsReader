@@ -20,7 +20,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	}, 
 
 	profilePage: function() {
-		console.log("profile page");
 		var that = this; 
 
 		var entryView = new FR.Views.NewEntryView({
@@ -32,7 +31,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		that.$rootEl.append(entryView.render().$el);
 
 		var $container = $('.masonrycontainer');
-		console.log("here");
 	      $container.imagesLoaded(function(){
 	        $container.masonry({
 	          itemSelector : '.content-box',
@@ -53,26 +51,25 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	newsFeed: function() {
 		var that = this; 
 		var search = new FR.Views.Search(); 
+		var $formatButton = $("<button class=format>List View</button>");
+
 		that.$rootEl.html(search.render().$el);
+		that.$rootEl.append($formatButton);
 
 		var newsFeedView = new FR.Views.NewsFeedView({
-			collection: FR.Store.Articles
+			collection: FR.Store.Articles,
 		}); 
 
-		console.log("news feed view collection" , newsFeedView.collection);
-		console.log("page #", newsFeedView.page);
-
-		FR.Store.Articles.fetch({ // rails or	]der does not matter here, need to sort it in the client side
-			success: function(articles){
-				newsFeedView._cleanse();
-				newsFeedView.page++; 
-			}
+		newsFeedView._addFollowingsArticle(function() {
+			FR.Store.Articles.fetch({ // rails or	]der does not matter here, need to sort it in the client side
+				success: function(articles){
+					newsFeedView._cleanse();
+					newsFeedView.page++; 
+					that.$rootEl.append(newsFeedView.render().$el);
+				}
+			});
 		});
 
-
-		newsFeedView._addFollowingsArticle(that.$rootEl);
-
-		that.$rootEl.append(newsFeedView.render().$el);
 	},
 
 	otherProfilePage: function(id) {

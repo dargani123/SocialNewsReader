@@ -1,7 +1,4 @@
-<div class="masonrycontainer span12 SocialFeed">
-
-    <% entries.each( function(entry) { %>
-    <div class="content-box">
+  <div class="content-box">
       <div class="text-content">
         <div class="content-title">
           <a class="title" href=<%=entry.escape('url') %>> 
@@ -19,6 +16,3 @@
       </div>
       <img src="<%= entry.escape('image') %>" class="content-image">
   </div>
-  <% }); %> 
-</div>
-

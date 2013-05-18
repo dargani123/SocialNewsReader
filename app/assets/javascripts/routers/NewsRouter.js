@@ -3,11 +3,7 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		var that = this;
 		that.$rootEl = $rootEl;
 		console.log("initialize of the router");
-		var entryView = new FR.Views.NewEntryView({
-			collection: FR.Store.Entries	
-		});
-		that.$rootEl.html(entryView.render().$el);
-		Backbone.history.navigate("#followers", {trigger: true});
+
 	},
 
 	routes: {
@@ -20,15 +16,19 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	}, 
 
 	profilePage: function() {
+		console.log("profilePage");
 		var that = this; 
 
-		var entryView = new FR.Views.NewEntryView({
-			collection: FR.Store.Entries
-		});
 
 		var search = new FR.Views.Search(); 
+		var $formatButton = $("<button class=format>List View</button>");
+
 		that.$rootEl.html(search.render().$el);
-		that.$rootEl.append(entryView.render().$el);
+		that.$rootEl.append($formatButton);
+		var profileView = new FR.Views.ProfileEntryView({
+			collection: FR.Store.Entries
+		});
+		that.$rootEl.append(profileView.render().$el); 
 
 		var $container = $('.masonrycontainer');
 	      $container.imagesLoaded(function(){
@@ -101,7 +101,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 				});
 			}
 		);
-
 
 	},
 

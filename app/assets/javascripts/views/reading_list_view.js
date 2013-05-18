@@ -29,7 +29,7 @@ FR.Views.ReadingListView = Backbone.View.extend({
 						entryToRender = new FR.Collections.Entries([entry]);
 						// console.log("This is the collection that is crreated, colleciton ", entryToRender);
 
-						entryView = new FR.Views.NewEntryView({
+						entryView = new FR.Views.ProfileEntryView({
 							collection: entryToRender
 						});
 						

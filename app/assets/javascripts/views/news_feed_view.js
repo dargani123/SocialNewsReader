@@ -5,19 +5,21 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
 		that.page = 0; 
 		that.rendering = false;
-		// console.log(($(window).scrollTop() + $(window).height() == $(document).height()));
 		
 		var throttled = _.throttle(function() {
 
-	   		if (($(window).scrollTop() + $(window).height() > $(document).height())) {
+	   		if (($(window).scrollTop() + $(window).height() > $(document).height()) && !that.rendering) {
 	   			that.render(); 
 	   		}
-		}, 50);
+		}, 100	);
 
 		$(window).scroll(throttled);
 
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
 		that.$el.append(that.$root); 
+		that.$root.attr('id', 'display-list');
+		that.$socialFeed = $("<div class=SocialFeed>");
+		that.$socialFeed.attr('id', 'display-list');
 
 		$("button.format").click(function() { 
 		
@@ -34,30 +36,32 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				        $container.masonry({
 				          itemSelector : '.content-box',
 				          columnWidth : 380,
-				          isAnimatedFromBottom: true, 
-				           animationOptions: {
-						    duration: 350,
-						    easing: 'linear',
-						    queue: true
-						  }
+				          isAnimated: true
+				        });
+				});
+
+				var $container2 = $('.masonrycontainer');
+				    $container2.imagesLoaded(function(){
+				        $container2.masonry({
+				          itemSelector : '.content-box',
+				          columnWidth : 380,
+				          isAnimated: true
 				        });
 				});
 
 			} else {
+				that.$root.masonry();
+				that.$socialFeed.masonry();
 				that.$root.masonry('destroy');
-				that.$root.removeClass("masonrycontainer2 span12 masonry");
 				that.$socialFeed.masonry('destroy');
+				that.$root.removeClass("masonrycontainer2 span12 masonry");
 				that.$socialFeed.removeClass("masonrycontainer span12 masonry");
-				// that.$root.html("<div>");
-				// that.render(); 
+				that.$root.removeAttr('style');
 			}
 
 			that._addFollowingsArticle(function(){}); 
-
-
 		});
 
-		that.$socialFeed = $("<div class=SocialFeed>");
 		that.collection.on('add-reading-list', that.render, that);
 	},
 
@@ -71,7 +75,10 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	render: function() {
+		console.log("render called");
+
 		var that = this; 
+		that.rendering = true; 
 		
 		// var collection = new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)));
 
@@ -87,20 +94,20 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				el: text === "List View" ? $("<div>") : $("<div class='content-box'>")
 			});
 			if (text === "Tile View"){
-				that.$root.append(articleView.render().$el);
+				var $content = articleView.render().$el;
+				that.$root.imagesLoaded(function(){ 
+					that.$root.append($content);
+					that.$root.masonry('appended', $content, 'isAnimatedFromBottom');
+					that.rendering = false;
+				});
+
 			} else {
 				that.$root.append(articleView.render().$el)
+				that.rendering = false;
 			}
 		});
-	
-		if (text === "Tile View")
-			that.$root.imagesLoaded(function(){ that.$root.masonry('reload') });
-	
-		that.page++;
-
 		
-
-		// that.$el.append(renderedContent); 
+		that.page++;
 		return that;
 	},
 
@@ -114,28 +121,15 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				var followingEntries = new FR.Collections.Entries(entries);
 				var content;
 
-				// if ($("button.format").text() === "List View") { 
-				// 	content = JST['entries/list_list_format']({
-				// 		entries: followingEntries
-				// 	});
-				// } else {
-				// 	content = JST['entries/list']({
-				// 		entries: followingEntries
-				// 	});
-				// }
 				that.$socialFeed.html("");
 				followingEntries.each(function(entry) {
 					var entryView = new FR.Views.EntryItemView({
 						model: entry
 					});
 
-					if (text === "Tile View")
-						that.$socialFeed.append(entryView.render().$el);
-					else 
-						that.$socialFeed.append(entryView.render().$el)
+					that.$socialFeed.append(entryView.render().$el)
 				});
 				
-				// that.$socialFeed.html(content);		
 				that.$el.prepend(that.$socialFeed);	
 			}
 		}).done(

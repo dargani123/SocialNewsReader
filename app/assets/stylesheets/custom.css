@@ -72,7 +72,9 @@
      border: none;
 }
 
-
+#display-list {
+    margin-left: 25px;
+}
 .clearfix { display: inline-block; }
 /* start commented backslash hack \*/
 * html .clearfix { height: 1%; }

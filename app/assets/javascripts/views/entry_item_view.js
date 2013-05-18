@@ -1,13 +1,17 @@
 FR.Views.EntryItemView = Backbone.View.extend({
 
 	initialize: function() {
-		var that = this; 
+		var that = this;
+		console.log("Inside the entry item initialize");
 		$("button.format").click(function() {
+
 			var text = $("button.format").text(); 
+			console.log(text);
 			if (text === "List View")
 				that.$el.removeClass('content-box');
-			else 
+			else {
 				that.$el.addClass('content-box');
+			}
 			that.render(); 
 		});
 	},
@@ -20,15 +24,17 @@ FR.Views.EntryItemView = Backbone.View.extend({
 			renderedContent = JST['entries/single_entry_list']({
 				entry: that.model
 			});
-		} else {
-			// console.log("should be getting the masonry");
-			
+		} else {			
 			renderedContent = JST['entries/single_entry_tile']({
 				entry: that.model
 			});
+			// that.$el.addClass('content-box');
 		}
 
 		that.$el.html(renderedContent);
+		if ($("button.format").text() === "Tile View") { 
+			that.$el.addClass('content-box');
+		}
 		return that;
 	}
 

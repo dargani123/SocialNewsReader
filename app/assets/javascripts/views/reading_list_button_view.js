@@ -33,22 +33,13 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 				}
 			});
 
-			// if(type === "follower") {
-			// 	var entry = entry_collection.where({id: parseInt(link_id)})[0];
-			// 	FR.Store.ReadingListEntries.add(entry);
-			// }	
-
 			$(ev.target).text("On Reading List");
 		} else {
 			console.log("destroying item");
 			var item = FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type})[0];
 			item.destroy({
 				success: function() {
-					$(ev.target).text("Add to Reading List");
-					// if(type === "follower") {
-					// 	entry = entry_collection.where({id: parseInt(link_id) })[0];
-					// 	FR.Store.ReadingListEntries.remove(entry);
-					// }	
+					$(ev.target).text("Add to Reading List");	
 				} 
 			});
 

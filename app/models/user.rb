@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
 
 	def tweet(params)
 		client = getTwitterClient
-		client.update("#{params['post']} #{params['url']}")
+		# client.update("#{params['post']} #{params['url']}")
 	end
 
 	def followingOnTwitter(ids=[])
@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 	def updateTwitterFeedStories 
 		if news_feed_articles.where(type: "TwitterArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
 			client = getTwitterClient
-			timeline = client.home_timeline(:count => 400, :include_entities => true)
+			timeline = client.home_timeline(:count => 40, :include_entities => true)
 			timeline.each do |status|
 				insertTwitterArticle(status)
 			end
@@ -75,8 +75,8 @@ class User < ActiveRecord::Base
 
 	def getTwitterClient
 		return Twitter::Client.new(
-			:consumer_key => "48wDtsMN0T8yITXKsKFbQ",
-			:consumer_secret => "eH4P4Nny7FutPTRmAGpZFoDYMumbpnr46CSskETxeyA",
+			:consumer_key => "W8RDU5pwSsh3xXcwL7nnlQ",
+			:consumer_secret => "ascFp5PQa5cH5XkBrp3PVhKzH7MDwnB52LOB0uDfAU",
 			:oauth_token => twitter_token,
 			:oauth_token_secret => secret_twitter_token
 		)
@@ -104,10 +104,10 @@ class User < ActiveRecord::Base
 		if news_feed_articles.where(type: "FacebookArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "FacebookArticle").last.created_at 
 			graph = Koala::Facebook::API.new(facebook_token)
 			friend_ids = facebook_friend_ids
-			threads1, threads2, threads3, results = [], [], [], []
+			threads, results = [], []
 
-			0.upto(30) do |i| 
-				threads1 << Thread.new { 
+			0.upto(friend_ids.length/10) do |i| 
+				threads << Thread.new { 
 						ids = []
 						index = (i*10) 
 						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
@@ -117,35 +117,7 @@ class User < ActiveRecord::Base
 				}
 			end
 
-			threads1.each { |aThread| aThread.join }
-
-			(31).upto(60) do |i| 
-				threads2 << Thread.new { 
-						ids = []	
-						index = (i*10) 
-						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
-						p query 
-						graph.fql_query(query) {|result| results << result unless result.empty? }
-				}
-			end
-
-			threads2.each { |aThread| aThread.join }
-
-			(61).upto(90) do |i| 
-				threads3 << Thread.new { 
-						ids = []	
-						index = (i*10) 
-						1.upto([10, friend_ids.count - index].min)  { |j| ids << friend_ids[j+index] } 
-						query = "SELECT comment_info, created_time, like_info, link_id, owner, title, owner_comment, picture, url, summary FROM link WHERE owner IN (#{ids.join(",")}) AND created_time > (now() - 86400/2) ORDER BY created_time DESC"
-						p query 
-						graph.fql_query(query) {|result| results << result unless result.empty? }
-				}
-			end
-
-			threads3.each { |aThread| aThread.join }
-
-			
+			threads.each { |aThread| aThread.join }
 			results.each { |result| insertFacebookArticle(result) }
 
 		end
@@ -198,7 +170,6 @@ class User < ActiveRecord::Base
 					url: status.urls.first.expanded_url, 
 					link_id: status.id,
 					user_id: self.id
-					# type: "TwitterArticle"
 				)
 			end
 		end
@@ -219,8 +190,4 @@ class User < ActiveRecord::Base
 			authentications.where(provider: "twitter").first.token_secret if linkedTwitter?
 		end
 end
-		# graph.batch do |api|
-		# 	1.upto([5, friend_ids.count - index].min)  do |j| 
-		# 		graph.get_connections(friend_ids[j], "links") { |result| results << result}
-		# 	end	 
-		# end
+

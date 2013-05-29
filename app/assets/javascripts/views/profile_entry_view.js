@@ -3,38 +3,62 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 	initialize: function() {
 		var that = this;
 		
+		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
+		that.$entryDetailEl = $('<div class=entry-detail> </div>');
+		that.$inputNavBar = JST['entry-input']();
 
-		this.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
-		this.$entryDetailEl = $('<div class=entry-detail> </div>');
-
-		that.$el.prepend($("<div><input class='entry-input' type='text' value='' placeholder='Share article here'></div>"));	
+		that.$el.prepend(that.$inputNavBar);
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
 		that.$el.append(that.$root);
-	
+		
+		that._initializeFormatButtonListener();
+		that._buttonListenerToClearInputBar();
+	},
 
+	_initializeFormatButtonListener: function() { // universal listener, extract it. 
+		var that = this;
 		$("button.format").click(function() { 
-			var text = $("button.format").text(); 
-			$("button.format").text(text === "List View" ? "Tile View" : "List View");
+			that._flipFormatButton();
 			text = $("button.format").text(); 
 
-			if (text === "Tile View") {
-				that.$root.addClass("masonrycontainer span12");
+			if (text === "Tile View") 
+				that._startMasonry(that.$root, "masonrycontainer span12");
+			else 
+				that._removeMasonryAndStyling(that.$root, "masonrycontainer span12 masonry");
+		});
+	},
 
-				var $container = $('.masonrycontainer');
-				    $container.imagesLoaded(function(){
-				        $container.masonry({
-				          itemSelector : '.content-box',
-				          columnWidth : 380,
-				          isAnimated: true
-				        });
-				});
+	_buttonListenerToClearInputBar: function() {
+		var that = this;
+		$("button.format").click(function() {
+			that.clearInputBar();
+		});
+	},
 
-			} else {
-				that.$root.masonry();
-				that.$root.masonry('destroy');
-				that.$root.removeClass("masonrycontainer span12 masonry");
-				that.$root.removeAttr('style');
-			}
+	
+	_flipFormatButton: function()
+	{
+		var text = $("button.format").text(); 
+		$("button.format").text(text === "List View" ? "Tile View" : "List View");
+	},
+
+	_removeMasonryAndStyling: function($el, classes) {
+		$el.masonry();
+		$el.masonry('destroy');
+		$el.removeClass(classes);
+		$el.removeAttr('style');
+	},
+
+	_startMasonry: function($masonryEl, classes){
+		$masonryEl.addClass(classes);
+		$masonryEl.masonry();
+		$masonryEl.imagesLoaded(function(){
+	        $masonryEl.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 380,
+	          isAnimated: true
+	        });
+			$('.masonrycontainer2').masonry('reload');
 		});
 	},
 
@@ -44,55 +68,47 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		"click img.share-facebook": "askForFacebookText",
 		"click img.share-twitter": "askForTweetText",
 		"click button.share": "batchShare",
-		"click button.submit-tweet": "sendTweet",
-		"click button.submit-fb": "sendFB"
+		"click img.submit-tweet": "sendTweet",
+		"click img.submit-fb": "sendFB",
+		"click button.batch-share": "batchShare",
+		"click button.format": "clearInputBar"
+	},
+
+	clearInputBar: function(){
+		console.log('clearInputBar called');
+		$('input.entry-input').val("");
+		this.$entryDetailEl.empty();
+		$('submit-post').remove();
+	},
+
+	batchShare: function(){
+
 	},
 
 	askForTweetText: function(ev) {
-		var that = this;
 		var entry_id = $(ev.target).attr('data-twt');
-		that.entry = that.collection.get(entry_id);
-
-		if ($(".twitter-input").length > 0){
-			$('button.submit-tweet').remove();
-			$('.twitter-input').remove();
-		}
-		else {
-			$("<textarea class='twitter-input'> </textarea>").insertAfter($(ev.target));
-			$('.twitter-input').val(that.entry.get('post'))	; 
-			$("<button class='submit-tweet'> Tweet Now! </button>").insertAfter($('.twitter-input'));	
-		}		
+		this.entry = this.collection.get(entry_id);	
 	},
 
 	sendTweet: function() {
 		var that = this; 
 		that.entry.set({post: $('.twitter-input').val()})
+
 		$.ajax({url: "/twitter_tweets", 
 			type: 'POST',
 			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
 			data: that.entry.toJSON(),
 			success: function() {
-				$('button.submit-tweet').remove();
-				$('.twitter-input').remove();
+				$('.twitter-input').val("");
 			}
-		});			
+		});		
 
 	},
 
 	askForFacebookText: function(ev) { 	
 		var that = this;
 		var entry_id = $(ev.target).attr('data-fb');
-		that.entry = that.collection.get(entry_id);
-
-		if ($(".fb-input").length > 0){
-			$('button.submit-fb').remove();
-			$('.fb-input').remove();
-		}
-		else {
-			$("<textarea class='fb-input'> </textarea>").insertAfter($(ev.target));
-			$('.fb-input').val(that.entry.get('post')); 
-			$("<button class='submit-fb'> Share Now! </button>").insertAfter($('.fb-input'));
-		}	
+		that.entry = that.collection.get(entry_id);	
 	},	
 
 	sendFB: function() {
@@ -104,7 +120,7 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 			data: that.entry.toJSON(), 
 			success: function() {
 				$('button.submit-fb').remove();
-				$('.fb-input').remove();
+				$('.fb-input').val("");
 			}
 		});	
 	},
@@ -120,13 +136,17 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 	},
 
 	_addEntry: function(entry) {
-		var text = $("button.format").text();
-		 
+		var that = this;
+		
 		var entryView = new FR.Views.EntryItemView({
 			model: entry
 		});
+		
+		$content = entryView.render().$el
+		that.$root.prepend($content);
+		
+		that._reloadIfTileView();
 
-		this.$root.prepend(entryView.render().$el);
 	}, 
 
 	showLinkAttributes: function(){
@@ -139,6 +159,8 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		else{
 			that.entry = new FR.Models.Entry();
 			that.$entryDetailEl.empty();
+			that._reloadIfTileView();
+			$('.submit-post').remove();
 		}
 	},
 
@@ -149,12 +171,13 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		that.entry.save({}, {
 			success: function() {
 				that.collection.add(that.entry);
+				that._addEntry(that.entry);
+				$('input.entry-input').val("");
+				that.$entryDetailEl.empty();
+				$('submit-post').remove();
+				that._reloadIfTileView();
 			}
 		});
-
-		that._addEntry(that.entry);
-		$('input.entry-input').val("");
-		that.$entryDetailEl.empty();
 	},
 
 	_showEmbedlyDisplay: function(url) {
@@ -164,19 +187,44 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 			url: that.request+escape(url),
 			success: function(embedly_data) {
 
-				var renderedContent = JST["entries/entry_to_add"]({
-					entry: that._setThatEntryAttributes(embedly_data)
+				var entryView = new FR.Views.EntryItemView({
+					model: that._setThatEntryAttributes(embedly_data)
 				});
 
-				that.$entryDetailEl.html(renderedContent);
-				that.$entryDetailEl.insertAfter('input.entry-input');
+				that.$entryDetailEl.append(entryView.render().$el);
+
+				that.$entryDetailEl.find('.panel').css('background-color', 'rgb(253, 226, 117)');
+				that.$entryDetailEl.find('.text-content').css('background-color', 'rgb(253, 226, 117)');
+
+
+				that.$root.prepend(that.$entryDetailEl);
+				if(that._buttonText() == "List View")
+					that.$entryDetailEl.find('.post').append($("<button class='submit-post'> Post </button>"));
+				else 
+					that.$entryDetailEl.find('.content-box').append($("<button class='submit-post'> Post </button>"));
+
+				that._reloadIfTileView();
+
 			}
 		});
 	},
 
+	_reloadIfTileView: function() {
+		var text = $("button.format").text();
+		var that = this;
+		if (text === "Tile View") {
+			that.$root.imagesLoaded(function(){ 
+				that.$root.masonry('reload');
+			});
+		}
+	},
+
+	_buttonText: function(){
+		return $("button.format").text();
+	},
+
 	_setThatEntryAttributes: function(embedly_data){
 		var that = this;
-		console.log(embedly_data);
 		that.entry = new FR.Models.Entry({
 			title: embedly_data.title,
 			description: embedly_data.description, 

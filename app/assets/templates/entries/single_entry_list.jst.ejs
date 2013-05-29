@@ -14,11 +14,48 @@
      </div>
       <div class="postname"> <%= "Posted by: " + "NEED TO FIX" %> </div> 
       <div class="posttext"> <%= entry.escape('post') %> </div> 
-      <img src='/fb_button.png' class="share-facebook" data-fb=<%=entry.escape('id')%> >
-      <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.escape('id')%>>
+    
+      <a href="#fbModal" role="button" data-toggle="modal">
+        <img src='/fb_button.png' class="share-facebook" data-fb=<%=entry.get('id')%> >
+      </a> 
+      <a href="#twitterModal" role="button" data-toggle="modal">
+        <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.get('id')%>>
+      </a>
+
+       
       <button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
       <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
       </button>  
     </div>
+  </div>
+</div>
+
+<!-- Button to trigger modal -->
+
+ 
+<!-- Modal -->
+<div id="fbModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="fbModalLabel" aria-hidden="true">
+  <div class="modal-header modal-header-fb">
+    <button type="button" class="close close-white" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="fbModalLabel">Share on Facebook!</h3>
+  </div>
+  <div class='modal-body modal-body-share'>
+    <textarea class='fb-input modal-text-area' placeholder='Share your thoughts here'></textarea>
+  </div>
+  <div class="modal-footer  share-footer">
+    <img src='/fb_button.png' data-dismiss="modal" class='submit-fb'> 
+  </div>
+</div>
+
+<div id="twitterModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="twitterModalLabel" aria-hidden="true">
+  <div class="modal-header modal-header-tweet">
+    <button type="button" class="close close-white" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="twitterModalLabel">Tweet your thoughts now!</h3>
+  </div>
+  <div class='modal-body modal-body-share'>
+    <textarea class='twitter-input modal-text-area' placeholder='Share your thoughts here'></textarea>
+  </div>
+  <div class="modal-footer share-footer">
+    <img src='/tweet.png' data-dismiss="modal" class='submit-tweet'> 
   </div>
 </div>

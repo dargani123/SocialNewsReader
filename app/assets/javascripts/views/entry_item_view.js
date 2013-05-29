@@ -2,9 +2,7 @@ FR.Views.EntryItemView = Backbone.View.extend({
 
 	initialize: function() {
 		var that = this;
-		console.log("Inside the entry item initialize");
 		$("button.format").click(function() {
-
 			var text = $("button.format").text(); 
 			console.log(text);
 			if (text === "List View")
@@ -28,7 +26,6 @@ FR.Views.EntryItemView = Backbone.View.extend({
 			renderedContent = JST['entries/single_entry_tile']({
 				entry: that.model
 			});
-			// that.$el.addClass('content-box');
 		}
 
 		that.$el.html(renderedContent);

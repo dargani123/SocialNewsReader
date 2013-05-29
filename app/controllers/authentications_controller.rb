@@ -22,22 +22,17 @@ class AuthenticationsController < ApplicationController
     omni = request.env["omniauth.auth"]
     authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
     if authentication
-      flash[:notice] = "Logged in Successfully"
-      sign_in_and_redirect User.find(authentication.user_id)      
+      authenticate(authentication)     
     elsif current_user
-      token = omni['credentials'].token
-      token_secret = omni['credentials'].secret
-      current_user.authentications.create!(:provider => omni['provider'], :uid => omni['uid'], :token => token, :token_secret => token_secret)
-      flash[:notice] = "Authentication successful."
-      sign_in_and_redirect current_user
+      add_other_account(omni['credentials'].token, omni['credentials'].secret)
     else
       user = User.new 
       user.name = omni.info.name
       user.apply_omniauth(omni) 
       if user.save
-       p "Twitter save true"
        flash[:notice] = "Logged in."
        sign_in User.find(user.id) ## TWITTER ADD NEWS FEED STUFF STILL
+       user.delay.updateTwitterFollowings
        redirect_to edit_user_registration_path
       else
        p "Twitter save false"
@@ -52,15 +47,9 @@ class AuthenticationsController < ApplicationController
     authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
 
     if authentication
-      flash[:notice] = "Logged in Successfully"
-      sign_in_and_redirect User.find(authentication.user_id)
-
+      authenticate
     elsif current_user
-      token = omni['credentials'].token
-      token_secret = omni['credentials'].secret
-      current_user.authentications.create!(:provider => omni['provider'], :uid => omni['uid'], :token => token, :token_secret => token_secret)
-      flash[:notice] = "Authentication successful."
-      sign_in_and_redirect current_user
+      add_other_account(omni, omni['credentials'].token, omni['credentials'].secret)
     else
       user = User.new 
       user.email = omni['extra']['raw_info']['email']
@@ -78,6 +67,18 @@ class AuthenticationsController < ApplicationController
 
     end
   end
+  
+  def authenticate(authentication)
+      flash[:notice] = "Logged in Successfully"
+      sign_in_and_redirect User.find(authentication.user_id)
+  end 
+
+  def add_other_account(token, token_secret)
+      current_user.authentications.create!(:provider => omni['provider'], :uid => omni['uid'], :token => token, :token_secret => token_secret)
+      flash[:notice] = "Authentication successful."
+      sign_in_and_redirect current_user
+  end
+
 
 
 

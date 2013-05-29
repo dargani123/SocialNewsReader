@@ -1,0 +1,43 @@
+.modal-footer.share-footer{
+	border-top:none;
+}
+
+textarea.modal-text-area {
+	height: 100%;
+	width: 100%;
+	border: none;
+	font-size: 20px; 
+	font-weight: lighter;
+}
+
+.modal-body.modal-body-share {
+	padding: 0px;
+	height: 100px;
+}
+
+.modal-header.modal-header-fb {
+	background-color: #4c66a4;
+	color: white;
+	text-align: center;
+}
+
+.modal-header.modal-header-tweet {
+	background-color: #00acee;
+	color: white;
+	text-align: center;
+	font-weight: lighter;
+}
+
+.submit-fb {
+	width: 25px;
+	height: 25px;
+}
+
+.submit-tweet {
+	width: 25px;
+	height: 25px;
+	border: none;
+}
+.close.close-white {
+	color: white;
+}

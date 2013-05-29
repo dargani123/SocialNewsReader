@@ -2,18 +2,11 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 
 	initialize: function() {
 		var that = this; 
-		that.request = "http://api.embed.ly/1/extract?key=4127ab7d942e43cf8e15bc5d79802973&url=";
+		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
 		that.page = 0; 
 		that.rendering = false;
 		
-		var throttled = _.throttle(function() {
-
-	   		if (($(window).scrollTop() + $(window).height() > $(document).height()) && !that.rendering) {
-	   			that.render(); 
-	   		}
-		}, 100	);
-
-		$(window).scroll(throttled);
+		that._startPageDownListener();
 
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
 		that.$el.append(that.$root); 
@@ -21,52 +14,70 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.$socialFeed = $("<div class=SocialFeed>");
 		that.$socialFeed.attr('id', 'display-list');
 
-		$("button.format").click(function() { 
-		
-			var text = $("button.format").text(); 
-			$("button.format").text(text === "List View" ? "Tile View" : "List View");
+		that._initializeFormatButtonListener();
+	},
+
+	events: {
+		"click .add-reading-list": "addToReadingList",
+	},
+
+	_startPageDownListener: function(){
+		var that = this;
+		var throttled = _.throttle(function() {
+	   		if (that._atBottom() && !that.rendering) {
+	   			that.render();
+	   		}
+		}, 100);
+
+		$(window).scroll(throttled);		
+	},
+
+	_atBottom: function(){
+		return ($(window).scrollTop() + $(window).height() > $(document).height());
+	},
+
+	_initializeFormatButtonListener: function() { // This method is different from profile view one, has add following articles, and has two elements instead of one 
+		var that = this;
+		$("button.format").click(function() { 	
+			that._flipFormatButton();
 			text = $("button.format").text(); 
 
 			if (text === "Tile View") {
-				that.$root.addClass("masonrycontainer2 span12");
-				that.$socialFeed.addClass("masonrycontainer span12");
-
-				var $container = $('.masonrycontainer2');
-				    $container.imagesLoaded(function(){
-				        $container.masonry({
-				          itemSelector : '.content-box',
-				          columnWidth : 380,
-				          isAnimated: true
-				        });
-				});
-
-				var $container2 = $('.masonrycontainer');
-				    $container2.imagesLoaded(function(){
-				        $container2.masonry({
-				          itemSelector : '.content-box',
-				          columnWidth : 380,
-				          isAnimated: true
-				        });
-				});
-
+				that._startMasonry(that.$root, "masonrycontainer2 span12");
+				that._startMasonry(that.$socialFeed, "masonrycontainer span12");
 			} else {
-				that.$root.masonry();
-				that.$socialFeed.masonry();
-				that.$root.masonry('destroy');
-				that.$socialFeed.masonry('destroy');
-				that.$root.removeClass("masonrycontainer2 span12 masonry");
-				that.$socialFeed.removeClass("masonrycontainer span12 masonry");
-				that.$root.removeAttr('style');
+				that._removeMasonryAndStyling(that.$root, "masonrycontainer2 span12 masonry");
+				that._removeMasonryAndStyling(that.$socialFeed, "masonrycontainer2 span12 masonry");
 			}
 
 			that._addFollowingsArticle(function(){}); 
 		});
-
-		that.collection.on('add-reading-list', that.render, that);
 	},
 
-	events: {
-		"click .add-reading-list": "addToReadingList"
+	_flipFormatButton: function()
+	{
+		var text = $("button.format").text(); 
+		$("button.format").text(text === "List View" ? "Tile View" : "List View");
+	},
+
+	_removeMasonryAndStyling: function($el, classes) {
+		$el.masonry();
+		$el.masonry('destroy');
+		$el.removeClass(classes);
+		$el.removeAttr('style');
+	},
+
+	_startMasonry: function($masonryEl, classes){
+		$masonryEl.addClass(classes);
+		$masonryEl.masonry();
+		$masonryEl.imagesLoaded(function(){
+	        $masonryEl.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 380,
+	          isAnimated: true
+	        });
+			$('.masonrycontainer2').masonry('reload');
+		});
 	},
 
 	addToReadingList: function(ev) {	
@@ -75,40 +86,72 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log("render called");
-
 		var that = this; 
 		that.rendering = true; 
-		
-		// var collection = new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)));
-
-		var renderedContent;
+		console.log("render called");
 
 		var articles = new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)));
-		var text = $("button.format").text(); 
 
-
-		articles.each(function(article) {
-			var articleView = new FR.Views.ArticleItemView({
-				model: article,
-				el: text === "List View" ? $("<div>") : $("<div class='content-box'>")
+		if (articles.length === 0) { // remember to set rendering to false in any helper methods here. 
+			that._addLoadingMessage();
+			console.log(that.page, "page");
+			console.log(articles);	
+			that.rendering = false;
+			return that;
+		} else {
+			console.log(that.page);
+			console.log(FR.Collections.Articles);
+			console.log(articles);
+			articles.each(function(article) {
+				that._appendArticleView(that._newArticleView(article));
 			});
-			if (text === "Tile View"){
-				var $content = articleView.render().$el;
-				that.$root.imagesLoaded(function(){ 
-					that.$root.append($content);
-					that.$root.masonry('appended', $content, 'isAnimatedFromBottom');
-					that.rendering = false;
-				});
+			that.rendering = false;
+			that.page++;
+			return that;
+		}
+	},
 
-			} else {
-				that.$root.append(articleView.render().$el)
-				that.rendering = false;
-			}
+	_addLoadingMessage: function() {
+		var that = this;
+		if (that._noArticlesLeft() && $('.end').length == 0)
+			that.$el.append("<div class='end'> no more articles </div>");
+		else if (!that._noArticlesLeft())  
+			that.$el.append("<div class='loading'>loading . . .</div>");
+	},
+
+	_noArticlesLeft: function() {
+		if (this.page === 0)
+			return false; 
+		else 
+			return this.page * 10 + 10 > this.collection.length;
+	},
+
+	_newArticleView: function(article) {
+		var text = $("button.format").text(); 
+		var articleView = new FR.Views.ArticleItemView({
+			model: article,
+			el: text === "List View" ? $("<div>") : $("<div class='content-box'>")
 		});
-		
-		that.page++;
-		return that;
+		return articleView;
+	},
+
+	_appendArticleView: function(articleView) {
+		var that = this;
+		var text = $("button.format").text(); 
+	
+		if (text === "Tile View"){
+			var $content = articleView.render().$el;
+
+			that.$root.imagesLoaded(function(){ 
+				that.$root.append($content);
+				that.$root.masonry('appended', $content, 'isAnimatedFromBottom');
+			});
+
+		} else {
+			that.$root.imagesLoaded(function(){ 
+				that.$root.append(articleView.render().$el)
+			});
+		}	
 	},
 
 	_addFollowingsArticle: function(callback) {
@@ -133,12 +176,13 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				that.$el.prepend(that.$socialFeed);	
 			}
 		}).done(
-				callback()
+			callback()
 		)
 
 	},
 
-	_cleanse: function(callback) {
+	_cleanse: function(callback) { // gets twitter articles pics and links from embedly 
+		console.log("cleanse called")
 		var that = this;
 		that.collection.each(function(article) { 
 				// console.log(article.get('title') === null);

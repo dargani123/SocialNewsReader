@@ -2,7 +2,6 @@ class FollowersController < ApplicationController
 	
 	def index 
 		followings = current_user.followings
-		"SHOULD NOT BE GETTING TO FOLLOWERS CONTROLLER RIGHT NOW"
 		render :json => followings 
 	end 
 

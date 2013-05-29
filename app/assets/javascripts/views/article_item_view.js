@@ -9,19 +9,18 @@ FR.Views.ArticleItemView = Backbone.View.extend({
 				that.$el.addClass('content-box');
 			that.render(); 
 		});
+
+		that.model.on("change", that.render, that);
 	},
 
 	render: function() { 
 		var that = this;
 		var renderedContent; 
-
 		if ($("button.format").text() === "List View") { 
 			renderedContent = JST['news_feed_articles/single_article_list']({
 				article: that.model
 			});
-		} else {
-			// console.log("should be getting the masonry");
-			
+		} else {			
 			renderedContent = JST['news_feed_articles/single_article_tile']({
 				article: that.model
 			});

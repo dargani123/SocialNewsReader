@@ -2,7 +2,7 @@ FR.Views.Search = Backbone.View.extend ({
 
 	initialize: function() {
 		var that = this;
-		var $input = $("<input class='add-follower-input todo-search' id='follower-add' type='text' value='' placeholder='Search'>");	
+		var $input = $("<input class='add-follower-input todo-search' type='search' id='follower-add' type='text' value='' placeholder='Search'>");	
 		that.$el.html($input);
 
 		$input.autocomplete({
@@ -12,7 +12,6 @@ FR.Views.Search = Backbone.View.extend ({
 				that.id = (ui.item.id);
 			}
 	 	});
-
 	},
 
 	events: {
@@ -32,7 +31,6 @@ FR.Views.Search = Backbone.View.extend ({
 
 			if (this.id === window.user_id){
 				Backbone.history.navigate("", {trigger: true});
-				console.log("id's are equal")
 			}
 			else 
 				Backbone.history.navigate("#/user_profiles/"+this.id, {trigger:true, replace:true});

@@ -2,8 +2,7 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	initialize: function ($rootEl) {
 		var that = this;
 		that.$rootEl = $rootEl;
-		console.log("initialize of the router");
-
+		
 	},
 
 	routes: {
@@ -20,11 +19,9 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		var that = this; 
 
 
-		var search = new FR.Views.Search(); 
 		var $formatButton = $("<button class=format>List View</button>");
+		that.$rootEl.html($formatButton);
 
-		that.$rootEl.html(search.render().$el);
-		that.$rootEl.append($formatButton);
 		var profileView = new FR.Views.ProfileEntryView({
 			collection: FR.Store.Entries
 		});
@@ -38,8 +35,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 	          isAnimated: true
 	        });
 	      });
-
-
 	},
 
 	requestFollowers: function() {
@@ -50,39 +45,35 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 
 	newsFeed: function() {
 		var that = this; 
-		var search = new FR.Views.Search(); 
 		var $formatButton = $("<button class=format>List View</button>");
-
-		that.$rootEl.html(search.render().$el);
-		that.$rootEl.append($formatButton);
+		that.$rootEl.html($formatButton);
 
 		var newsFeedView = new FR.Views.NewsFeedView({
-			collection: FR.Store.Articles,
+			collection: FR.Store.Articles
 		}); 
 
 		newsFeedView._addFollowingsArticle(function() {
-			FR.Store.Articles.fetch({ // rails or	]der does not matter here, need to sort it in the client side
+			FR.Store.Articles.fetch({ // rails does not matter here, need to sort it in the client side
 				success: function(articles){
+					$('.loading').remove();
 					newsFeedView._cleanse();
-					newsFeedView.page++; 
-					that.$rootEl.append(newsFeedView.render().$el);
+					newsFeedView.render();
 				}
 			});
 		});
 
+		that.$rootEl.append(newsFeedView.render().$el);
+		console.log(newsFeedView.page);
 	},
 
 	otherProfilePage: function(id) {
 		var that = this;
-		var search = new FR.Views.Search(); 
-		that.$rootEl.html(search.render().$el);
-
+		that.$rootEl.html($("<button class=format>List View</button>"));
 		var otherProfilePageView; 
 
 		$.getJSON(
 			"/user_profiles/" + id, 
 			function(entries) {
-				//console.log(entries);
 				otherProfilePageView = new FR.Views.OtherProfile({
 					collection: new FR.Collections.Entries(entries)
 				});
@@ -90,15 +81,6 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		).done(
 			function(){
 				that.$rootEl.append(otherProfilePageView.render().$el);
-
-				var $container = $('.masonrycontainer');
-				$container.imagesLoaded(function(){
-					$container.masonry({
-						itemSelector : '.content-box',
-						columnWidth : 380,
-						isAnimated: true
-					});
-				});
 			}
 		);
 
@@ -106,12 +88,15 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 
 	readingList: function() {
 		var that = this;
+		that.$rootEl.html($("<button class=format>List View</button>"));
+
+		FR.Store.ReadingList.fetch();
 
 		var readingListView = new FR.Views.ReadingListView({
 			collection: FR.Store.ReadingList
 		});
 		
-		that.$rootEl.html(readingListView.render().$el);
+		that.$rootEl.append(readingListView.render().$el);
 	}
 
 

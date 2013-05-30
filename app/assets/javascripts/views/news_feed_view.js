@@ -26,6 +26,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		var throttled = _.throttle(function() {
 	   		if (that._atBottom() && !that.rendering) {
 	   			that.render();
+	   			// that._reloadIfTileView();
 	   		}
 		}, 100);
 
@@ -94,17 +95,14 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 
 		if (articles.length === 0) { // remember to set rendering to false in any helper methods here. 
 			that._addLoadingMessage();
-			console.log(that.page, "page");
-			console.log(articles);	
 			that.rendering = false;
 			return that;
 		} else {
-			console.log(that.page);
-			console.log(FR.Collections.Articles);
-			console.log(articles);
+		
 			articles.each(function(article) {
 				that._appendArticleView(that._newArticleView(article));
 			});
+
 			that.rendering = false;
 			that.page++;
 			return that;
@@ -200,6 +198,16 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		    }
 		});
 
+	},
+
+	_reloadIfTileView: function() {
+		var text = $("button.format").text();
+		var that = this;
+		if (text === "Tile View") {
+			that.$root.imagesLoaded(function(){ 
+				that.$root.masonry('reload');
+			});
+		}
 	},
 
 	_setThatEntryAttributes: function(embedly_data, object){

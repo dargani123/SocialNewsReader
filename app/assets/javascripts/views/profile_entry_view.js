@@ -2,10 +2,12 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 
 	initialize: function() {
 		var that = this;
+		that.priorURL = "";
 		
 		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
 		that.$entryDetailEl = $('<div class=entry-detail> </div>');
 		that.$inputNavBar = JST['entry-input']();
+
 
 		that.$el.prepend(that.$inputNavBar);
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
@@ -71,14 +73,35 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		"click img.submit-tweet": "sendTweet",
 		"click img.submit-fb": "sendFB",
 		"click button.batch-share": "batchShare",
-		"click button.format": "clearInputBar"
+		"click button.format": "clearInputBar",
+		"click input.entry-input": "clearIfTextExists"
+		// "keyup :input.entry-input": "clearIfTextExists"
+
+	},
+
+	clearIfTextExists: function(){
+		if($('input.entry-input').val() != ""){
+			$('input.entry-input').val("");
+			this.$entryDetailEl.empty();
+			this.$entryDetailEl.remove();
+		}
 	},
 
 	clearInputBar: function(){
 		console.log('clearInputBar called');
 		$('input.entry-input').val("");
-		this.$entryDetailEl.empty();
 		$('submit-post').remove();
+		this._removeMasonryAndStyling(this.$entryDetailEl, "masonrycontainer span12 masonry");
+		this.$entryDetailEl.empty();
+		this.$entryDetailEl.remove();
+		this._reloadIfTileView();
+	},
+
+	_removeMasonryAndStyling: function($el, classes) { //global helper method. 
+		$el.masonry();
+		$el.masonry('destroy');
+		$el.removeClass(classes);
+		$el.removeAttr('style');
 	},
 
 	batchShare: function(){
@@ -153,15 +176,22 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		var that = this;
 		var url = $('input.entry-input').val();
 
-		if(url.length > 0) {
-			that._showEmbedlyDisplay(url);
+		if (that.priorURL != "" && url.length > 0) {
+			that.clearIfTextExists();
+			that.priorURL = "";
 		}
-		else{
-			that.entry = new FR.Models.Entry();
-			that.$entryDetailEl.empty();
-			that._reloadIfTileView();
-			$('.submit-post').remove();
-		}
+		else {
+			that.priorURL = url; 
+			if(url.length > 0)
+				that._showEmbedlyDisplay(url);
+			else{
+				that.entry = new FR.Models.Entry();
+				that.$entryDetailEl.empty();
+				$('.submit-post').remove();
+			}			
+		}		
+
+		that._reloadIfTileView();
 	},
 
 	postEntry: function() {	
@@ -193,9 +223,8 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 
 				that.$entryDetailEl.append(entryView.render().$el);
 
-				that.$entryDetailEl.find('.panel').css('background-color', 'rgb(253, 226, 117)');
-				that.$entryDetailEl.find('.text-content').css('background-color', 'rgb(253, 226, 117)');
-
+				that.$entryDetailEl.find('.panel').css('background-color', '#ECF0F1');
+				that.$entryDetailEl.find('.text-content').css('background-color', '#ECF0F1');
 
 				that.$root.prepend(that.$entryDetailEl);
 				if(that._buttonText() == "List View")

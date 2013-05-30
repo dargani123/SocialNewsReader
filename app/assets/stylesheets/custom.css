@@ -182,6 +182,7 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
     font-size: 18px;
     font-weight: lighter;
     padding: 5px;
+    float: right;
 }
 
 

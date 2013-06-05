@@ -12,6 +12,5 @@ class UserProfilesController < ApplicationController
 		end
 		render :json => users
 	end
-
+	
 end
-#### Fix the above, change up on the client side

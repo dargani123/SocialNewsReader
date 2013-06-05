@@ -79,7 +79,4 @@ class AuthenticationsController < ApplicationController
       sign_in_and_redirect current_user
   end
 
-
-
-
 end

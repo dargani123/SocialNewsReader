@@ -181,7 +181,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				$('.loading').remove();
 				that._cleanse();
 				if (that.addedArticles.length > 0)
-					that._addInsertButton(that.addedArticles.length);
+					that._addInsertButton(that.addedArticles.length);	
 			}, 
 		});
 	},

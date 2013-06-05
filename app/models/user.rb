@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
 
 
 	def apply_omniauth(omni)
-	authentications.build(
-                       :provider => omni['provider'],
-                       :uid => omni['uid'],
-                       :token => omni['credentials'].token,
-                       :token_secret => omni['credentials'].secret)
+		authentications.build(
+		   :provider => omni['provider'],
+		   :uid => omni['uid'],
+		   :token => omni['credentials'].token,
+		   :token_secret => omni['credentials'].secret)
 	end
 
 	def password_required?
@@ -67,22 +67,14 @@ class User < ActiveRecord::Base
 	end
 
 	def updateTwitterFeedStories 
-		# p "update Twitter Stories"
-		# p Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
-		# p "last article created at #{news_feed_articles.last.created_at} #{news_feed_articles.last.title}"
-		# p "first article created at #{news_feed_articles.first.created_at} #{news_feed_articles.first}"
-		# p "#{Time.now} + Time.now - 86400/2 "
-		# if news_feed_articles.where(type: "TwitterArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
-			p "updated Twitter"
-
-			client = getTwitterClient
-			since_id = since_id_twitter || 1000
-			timeline = client.home_timeline(:since_id => since_id, :count => 40, :include_entities => true)
-			timeline.each do |status|
-				insertTwitterArticle(status)
-			end
-			# fail
-			update_attributes(:since_id_twitter => timeline.first.id)  if timeline.first
+		client = getTwitterClient
+		since_id = since_id_twitter || 1000
+		timeline = client.home_timeline(:since_id => since_id, :count => 40, :include_entities => true)
+		timeline.each do |status|
+			insertTwitterArticle(status)
+		end
+		# fail
+		update_attributes(:since_id_twitter => timeline.first.id)  if timeline.first
 	end
 
 	def getTwitterClient

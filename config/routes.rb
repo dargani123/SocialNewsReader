@@ -1,5 +1,9 @@
 NewsReader::Application.routes.draw do
-    root :to => "entries#index"
+  root :to => "entries#index"
+
+  devise_scope :users do
+    root :to => "registrations#new"
+  end
 
   resources :authentications
 

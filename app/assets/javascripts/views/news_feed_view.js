@@ -180,7 +180,6 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				);
 				$('.loading').remove();
 				that._cleanse();
-				console.log(that.addedArticles);
 				if (that.addedArticles.length > 0)
 					that._addInsertButton(that.addedArticles.length);
 			}, 
@@ -200,6 +199,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		_(articles).each(function(article){
 			that._prependArticle(article);
 		});
+		that._reloadIfTileView();
 	},
 
 	_prependArticle: function(article){
@@ -212,7 +212,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 
 			that.$root.imagesLoaded(function(){ 
 				that.$root.prepend($content);
-				that.$root.masonry('reload');
+				that._reloadIfTileView();
 			});
 
 		} else {

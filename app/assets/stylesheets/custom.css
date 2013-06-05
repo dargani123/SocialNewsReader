@@ -159,7 +159,7 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
 }
 
 .insert:hover{
-    color: black;
+    color: black;   
 }
 
 .format { 
@@ -208,10 +208,139 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
     font-size: 10px;
 }
 
+.info-box{
+    margin-left: 50px;
+    height: 400px;
+    width: 100%;
+    display: inline;
+    background-color: white;
+}
+
+.registration{
+    margin-left: 50px;
+    height: 100%;
+    width: 100%;
+    display: inline;
+    background-color: #ECF0F1;
+}
+
+.outer-container:{
+    background: white;
+    margin-top: 100px;
+}
+
+#user_email {
+    width: 98%;
+    height: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+    border: none;
+    color: #3498DB;
+}
+
+#user_password {
+    margin-top: 15px;
+    width: 98%;
+    height: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+    border: none;
+    color: #3498DB;
+}
+
+#user_name{
+    margin-top: 15px;
+    width: 98%;
+    height: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+    border: none;
+    color: #3498DB;  
+}
+
+#user_password_confirmation{
+    margin-top: 15px;
+    width: 98%;
+    height: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+    border: none;
+    color: #3498DB;     
+}
+
+input:focus:invalid:focus, textarea:focus:invalid:focus, select:focus:invalid:focus{
+     -webkit-box-shadow: #3498DB;
+}
+
+input.sign-in-button{
+    margin-top: 15px;   
+    border: none;
+    border-radius: 6px;
+    background-color: #3498DB;
+    color: white;
+    width: 100%;
+    height: 40px;
+    font-size: 20px;
+    font-weight: lighter;
+}
+
+.login-form{
+    position: static;
+}
+
+.Twitter_social_sign_in {
+   background: url("http://localhost:3000/tweet.png");
+   height: 40px;;
+}
+
+.social_sign_in{
+    height: 40px;
+    float:left;
+    display: inline;
+    border-radius: 6px;
+}
+
+.twitter_sign{
+    float: right;
+}
+
+.transition{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    float: left;
+    margin-top: 35px;
+    margin-bottom: 2px; 
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
 
 #display-list {
     margin-left: 25px;
 }
+
+.sign-up-button{
+    float: bottom;
+    margin-top: 15px;
+    float: left;
+    left: 25%;
+    position: relative;
+    display: inline-block;
+    height: 29px;
+    background: #E74C3C;
+    width: 50%;
+    border-radius: 6px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 9px;
+    font-size: 20px;
+    color: white; 
+    font-weight: lighter;
+}
+
 .clearfix { display: inline-block; }
 /* start commented backslash hack \*/
 * html .clearfix { height: 1%; }

@@ -26,6 +26,9 @@
      var readingListData = <%= current_user.reading_list_items.to_json.html_safe %> 
     // var followingsData = {};
     
+    window.username =  "<%= current_user.name %>";
+
+
     window.FR.initialize(
       $("#content"),
       feedsData,
@@ -33,7 +36,8 @@
       followingsData,
       articlesData,
       readingListData,
-      $("#navbar")
+      $("#navbar"),
+      "<%= current_user.name %>"
     );
     window.user_id = <%= current_user.id %>;
   });

@@ -5,6 +5,12 @@
 
   <div><%= f.label :email %><br />
   <%= f.email_field :email %></div>
+
+
+  <label for="user_name">User Name</label>
+  <%= f.text_field :name %> <br />
+
+    
 <% if @user.password_required? %>
   <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
   <%= f.password_field :password %></div>

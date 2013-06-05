@@ -3,21 +3,19 @@
           <a class="title" href=<%=entry.escape('url') %>> 
           <%= entry.escape('title') %> </a>
         </div> 
+        <div class="article-author"> Posted by: <%= name %> </div>
         <div class="content-share">   
-
         <a href="#fbModal" role="button" data-toggle="modal">
           <img src='/fb_button.png' class="share-facebook" data-fb=<%=entry.get('id')%> >
         </a> 
         <a href="#twitterModal" role="button" data-toggle="modal">
           <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.get('id')%>>
         </a>
-        
           <button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
           <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
           </button>   
           <br class="clearfix" />
         </div>
-        <strong> <%= entry.escape('post') %> </strong>
       </div>
       <img src="<%= entry.escape('image') %>" class="content-image">
 

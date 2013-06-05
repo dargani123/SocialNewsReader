@@ -75,7 +75,6 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		"click button.batch-share": "batchShare",
 		"click button.format": "clearInputBar",
 		"click input.entry-input": "clearIfTextExists"
-		// "keyup :input.entry-input": "clearIfTextExists"
 
 	},
 
@@ -152,21 +151,21 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		var that = this;
 
 		that.collection.each(function(entry) {
-			that._addEntry(entry);
+			that._addEntry(entry, FR.Store.username);
 		});
 
 		return that;
 	},
 
-	_addEntry: function(entry) {
+	_addEntry: function(entry, name) { // Make Global
 		var that = this;
-		
+
 		var entryView = new FR.Views.EntryItemView({
-			model: entry
+			model: entry, 
+			name: name
 		});
 		
-		$content = entryView.render().$el
-		that.$root.prepend($content);
+		that.$root.prepend(entryView.render().$el);
 		
 		that._reloadIfTileView();
 
@@ -201,7 +200,7 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		that.entry.save({}, {
 			success: function() {
 				that.collection.add(that.entry);
-				that._addEntry(that.entry);
+				that._addEntry(that.entry, FR.Store.username);
 				$('input.entry-input').val("");
 				that.$entryDetailEl.empty();
 				$('submit-post').remove();
@@ -216,26 +215,29 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 			dataType: "JSONP",
 			url: that.request+escape(url),
 			success: function(embedly_data) {
-
 				var entryView = new FR.Views.EntryItemView({
 					model: that._setThatEntryAttributes(embedly_data)
 				});
-
 				that.$entryDetailEl.append(entryView.render().$el);
 
-				that.$entryDetailEl.find('.panel').css('background-color', '#ECF0F1');
-				that.$entryDetailEl.find('.text-content').css('background-color', '#ECF0F1');
-
+				that._setEntryDetailBackgroundColor();
 				that.$root.prepend(that.$entryDetailEl);
-				if(that._buttonText() == "List View")
-					that.$entryDetailEl.find('.post').append($("<button class='submit-post'> Post </button>"));
-				else 
-					that.$entryDetailEl.find('.content-box').append($("<button class='submit-post'> Post </button>"));
-
+				that._appendSubmitButton();
 				that._reloadIfTileView();
-
 			}
 		});
+	},
+
+	_appendSubmitButton: function(){
+		if(this._buttonText() == "List View")
+			this.$entryDetailEl.find('.post').append($("<button class='submit-post'> Post </button>"));
+		else 
+			this.$entryDetailEl.find('.content-box').append($("<button class='submit-post'> Post </button>"));
+	},
+
+	_setEntryDetailBackgroundColor: function(){
+		this.$entryDetailEl.find('.panel').css('background-color', '#ECF0F1');
+		this.$entryDetailEl.find('.text-content').css('background-color', '#ECF0F1');
 	},
 
 	_reloadIfTileView: function() {

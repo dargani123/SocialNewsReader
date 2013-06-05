@@ -1,5 +1,7 @@
 FR.Views.ReadingListButtonView = Backbone.View.extend({
 
+
+
 	events: {
 		"click .add-reading-list" : "addToReadingList"
 	},
@@ -19,7 +21,6 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 		var that = this;
 
 		if (!that._onReadingList(link_id, type)) {
-			console.log("adding item");
 			var list_item = new FR.Models.ReadingListItem({
 				article_id: link_id,
 				article_type: type,
@@ -35,7 +36,6 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 
 			$(ev.target).text("On Reading List");
 		} else {
-			console.log("destroying item");
 			var item = FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type})[0];
 			item.destroy({
 				success: function() {

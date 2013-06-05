@@ -25,10 +25,8 @@ FR.Views.Search = Backbone.View.extend ({
 	},
 
 	UserEntered: function(event) {
-		console.log(this.id);
+		console.log(window.user_id)
 		if (event.keyCode == 13) {
-			console.log($(event.target).val());
-
 			if (this.id === window.user_id){
 				Backbone.history.navigate("", {trigger: true});
 			}

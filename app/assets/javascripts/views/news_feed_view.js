@@ -5,7 +5,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
 		that.page = 0; 
 		that.rendering = false;
-		
+		that.addedArticles = [];
 		that._startPageDownListener();
 
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
@@ -15,10 +15,27 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.$socialFeed.attr('id', 'display-list');
 
 		that._initializeFormatButtonListener();
+		that._startFetchingArticles();
 	},
 
 	events: {
 		"click .add-reading-list": "addToReadingList",
+		"click button.insert": "removeInsertButton"
+	},
+
+	removeInsertButton: function(){
+		console.log("remove pressed");
+		$('button.insert').remove();
+		this.prependArticles(this.addedArticles);
+		this.addedArticles = [];
+	},
+
+
+	_startFetchingArticles: function() {
+		var that = this;
+		window.setInterval(function() {
+			that.fetchArticles()
+		}, 60000);
 	},
 
 	_startPageDownListener: function(){
@@ -51,7 +68,6 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 				that._removeMasonryAndStyling(that.$socialFeed, "masonrycontainer2 span12 masonry");
 			}
 
-			that._addFollowingsArticle(function(){}); 
 		});
 	},
 
@@ -125,7 +141,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	_newArticleView: function(article) {
-		var text = $("button.format").text(); 
+		var text = $("button.format").text();
 		var articleView = new FR.Views.ArticleItemView({
 			model: article,
 			el: text === "List View" ? $("<div>") : $("<div class='content-box'>")
@@ -133,7 +149,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		return articleView;
 	},
 
-	_appendArticleView: function(articleView) {
+	_appendArticleView: function(articleView) { /// CHANGED TO PREPEND
 		var that = this;
 		var text = $("button.format").text(); 
 	
@@ -152,38 +168,64 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		}	
 	},
 
-	_addFollowingsArticle: function(callback) {
-		var that = this; 
+	fetchArticles: function(){
+		var that = this;
+		var last_id = this.collection.length;
+		that.collection.fetch({ // rails does not matter here, need to sort it in the client side
+			success: function(articles){
+				that.addedArticles = that.addedArticles.concat(
+					_.filter(articles.models, function(a) { 
+						return parseInt(a.get('id')) > last_id; 
+					})
+				);
+				$('.loading').remove();
+				that._cleanse();
+				console.log(that.addedArticles);
+				if (that.addedArticles.length > 0)
+					that._addInsertButton(that.addedArticles.length);
+			}, 
+		});
+	},
+
+	_addInsertButton: function(num_articles){ 
+		if($('.insert').length === 0) {
+			var $button = $("<button class='insert span8 offset2'>" + num_articles + " new articles</button>");
+			this.$el.prepend($button);
+		} else 
+			$('.insert').text(num_articles + " new articles");		
+	},
+
+	prependArticles: function(articles) { 
+		var that = this;
+		_(articles).each(function(article){
+			that._prependArticle(article);
+		});
+	},
+
+	_prependArticle: function(article){
+		var that = this;
 		var text = $("button.format").text(); 
-		$.ajax({url: "/following_articles", 
-			type: 'GET',
-			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-			success: function(entries) {
-				var followingEntries = new FR.Collections.Entries(entries);
-				var content;
+		var articleView = that._newArticleView(article);
+	
+		if (text === "Tile View"){
+			var $content = articleView.render().$el;
 
-				that.$socialFeed.html("");
-				followingEntries.each(function(entry) {
-					var entryView = new FR.Views.EntryItemView({
-						model: entry
-					});
+			that.$root.imagesLoaded(function(){ 
+				that.$root.prepend($content);
+				that.$root.masonry('reload');
+			});
 
-					that.$socialFeed.append(entryView.render().$el)
-				});
-				
-				that.$el.prepend(that.$socialFeed);	
-			}
-		}).done(
-			callback()
-		)
-
+		} else {
+			that.$root.imagesLoaded(function(){ 
+				that.$root.prepend(articleView.render().$el)
+			});
+		}
 	},
 
 	_cleanse: function(callback) { // gets twitter articles pics and links from embedly 
 		console.log("cleanse called")
 		var that = this;
 		that.collection.each(function(article) { 
-				// console.log(article.get('title') === null);
 			if (article.get('type') === "TwitterArticle" && article.get('title') === null) {
 		
 				$.ajax({

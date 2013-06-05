@@ -5,7 +5,7 @@ class RegistrationsController < Devise::RegistrationsController
 		if session[:omniauth]
 			@user.apply_omniauth(session[:omniauth])
 			@user.valid?
-			@user.name = session[:omniauth].info.name
+			# @user.name = session[:omniauth].info.name
 		end
 	end
 
@@ -15,4 +15,4 @@ class RegistrationsController < Devise::RegistrationsController
 	end
 
 end
-	
+		

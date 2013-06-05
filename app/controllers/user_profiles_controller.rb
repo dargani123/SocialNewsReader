@@ -2,7 +2,7 @@ class UserProfilesController < ApplicationController
 
 	def show 
 		user = User.find(params[:id])
-		render :json => user.entries
+		render :json => {entries: user.entries, username: user.name} 	
 	end 
 
 	def index

@@ -10,6 +10,15 @@ FR.Views.ReadingListView = Backbone.View.extend({
 		that._initializeFormatButtonListener();
 	},
 
+	events: {
+		"click .add-reading-list": "addReadingList"
+	},	
+
+	addReadingList: function(ev){
+		var listButton = new FR.Views.ReadingListButtonView();
+		listButton.addToReadingList(ev, this.collection);
+	},
+
 	_initializeFormatButtonListener: function() {
 		var that = this;
 		$("button.format").click(function() { 

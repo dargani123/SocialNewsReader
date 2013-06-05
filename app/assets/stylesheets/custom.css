@@ -146,6 +146,22 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
      border: none;
 }
 
+.insert{
+    margin-left: auto;
+    margin-right: auto; 
+    height: 35px;
+    display: block;
+    border: none;
+    background-color: #ECF0F1;
+    font-size: 16px;
+    font-weight: thin;
+    color: #95A5A6;
+}
+
+.insert:hover{
+    color: black;
+}
+
 .format { 
      margin-left: 50px; 
      background-color: #1ABC9C;
@@ -183,6 +199,13 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
     font-weight: lighter;
     padding: 5px;
     float: right;
+}
+
+.article-author{
+    color: white;
+    position: absolute;
+    margin-top: 7px;
+    font-size: 10px;
 }
 
 

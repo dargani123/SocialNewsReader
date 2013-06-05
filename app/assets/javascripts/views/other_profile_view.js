@@ -1,8 +1,10 @@
 FR.Views.OtherProfile = Backbone.View.extend({
 	
-	initialize: function() {
+	initialize: function(vars) {
 		var that = this; 
-		this.id = parseInt(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+		that.id = parseInt(document.URL.substring(document.URL.lastIndexOf('/') + 1));
+		that.username = vars.username;
+		console.log(vars.username);
 
 		var $button = $("<button class=follow></button>");	
 		$button.text(this._FollowButtonText());
@@ -12,6 +14,18 @@ FR.Views.OtherProfile = Backbone.View.extend({
 		that.$el.append(that.$root);
 
 		that._initializeFormatButtonListener();
+		$('button.add-reading-list').click(function(){
+			console.log("pressed");
+		});
+	},
+
+	events: {
+		"click .add-reading-list": "addToReadingList"
+	},
+
+	addToReadingList: function(ev) {	
+		var listButton = new FR.Views.ReadingListButtonView();
+		listButton.addToReadingList(ev);
 	},
 
 	_initializeFormatButtonListener: function() {
@@ -63,12 +77,8 @@ FR.Views.OtherProfile = Backbone.View.extend({
 				}).length > 0); 
 	},
 
-	events: {
-		"click .follow": "follow",
-		"click .add-reading-list": "addReadingList"
-	},	
-
 	addReadingList: function(ev){
+		console.log("add reading list");	
 		var listButton = new FR.Views.ReadingListButtonView();
 		listButton.addToReadingList(ev, this.collection);
 	},
@@ -77,21 +87,35 @@ FR.Views.OtherProfile = Backbone.View.extend({
 		var that = this;
 
 		that.collection.each(function(entry) {
-			that._addEntry(entry);
-		});
+			that._addEntry(entry, that.username);
+		});	
 
 		return that;
 	},
 
-	_addEntry: function(entry) {
-		var text = $("button.format").text();
+	_addEntry: function(entry, name) { // Make Global
+		var that = this;
 
 		var entryView = new FR.Views.EntryItemView({
-			model: entry
+			model: entry, 
+			name: name
 		});
+		
+		that.$root.prepend(entryView.render().$el);
+		
+		that._reloadIfTileView();
 
-		this.$root.prepend(entryView.render().$el);
 	}, 
+
+	_reloadIfTileView: function() {
+		var text = $("button.format").text();
+		var that = this;
+		if (text === "Tile View") {
+			that.$root.imagesLoaded(function(){ 
+				that.$root.masonry('reload');
+			});
+		}
+	},
 
 	follow: function() { 
 		var that = this; 

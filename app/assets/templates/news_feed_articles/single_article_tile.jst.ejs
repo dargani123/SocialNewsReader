@@ -3,6 +3,7 @@
           <a class="title" href=<%=article.escape('url') %>> 
           <%= article.escape('title') %> </a>
         </div> 
+        <div class="article-author"> Posted by: <%= article.escape('name') %> </div>
         <div class="content-share">   
           <img src='/fb_button.png' class="share-facebook" data-fb=<%=article.escape('id')%> >
           <img src='/tweet.png' class="share-twitter" data-twt=<%=article.escape('id')%>>
@@ -11,6 +12,5 @@
           </button> 
           <br class="clearfix" />
         </div>
-        <strong> <%= article.escape('text') %> </strong>
       </div>
       <img src="<%= article.escape('image_url') %>" class="content-image">

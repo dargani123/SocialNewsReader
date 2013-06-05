@@ -7,7 +7,7 @@
 <div> <%= session[:omniauth] == "twitter" ? "Enter your email you'd like to use", "Confirm Email" %>  
 <div><%= f.label :email %><br />
  <%= f.email_field :email , :value => %></div>
- 
+
 <% unless session[:omniauth] %>
  <div><%= f.label :password %><br />
  <%= f.password_field :password %></div>

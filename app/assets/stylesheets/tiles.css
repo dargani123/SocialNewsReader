@@ -26,9 +26,9 @@
       box-shadow:  2px 2px 2px #888888;
     }
 
-    .text-content: {
+   /* .text-content: {
       opacity: .2;
-    }
+    }*/
 
     .share-facebook{
      width: 25px;
@@ -54,7 +54,6 @@
     .text-content {
       padding: 10px 10px 10px;
       padding-bottom: 30px;
-
     }
 
     .share-button {

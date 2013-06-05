@@ -1,4 +1,4 @@
-# require 'Thread'
+	# require 'Thread'
 require 'json'
 
 class User < ActiveRecord::Base
@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :since_id_twitter
 
   # after_save :updateTwitterFollowings	
 
@@ -21,6 +21,10 @@ class User < ActiveRecord::Base
 	has_many :news_feed_articles
 	has_many :followings, :class_name => "Follower"
 	has_many :reading_list_items
+	has_many :followings_entries, :through => :followings, :source => :entries
+
+	validates :name, :uniqueness => true
+	validates_format_of :name, :with => /^[A-Za-z\d_]+$/, :message => "can only be alphanumeric with no spaces"
 	
 
 
@@ -55,7 +59,6 @@ class User < ActiveRecord::Base
 
 	def tweet(params)
 		client = getTwitterClient
-		# client.update("#{params['post']} #{params['url']}")
 	end
 
 	def followingOnTwitter(ids=[])
@@ -64,13 +67,22 @@ class User < ActiveRecord::Base
 	end
 
 	def updateTwitterFeedStories 
-		if news_feed_articles.where(type: "TwitterArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
+		# p "update Twitter Stories"
+		# p Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
+		# p "last article created at #{news_feed_articles.last.created_at} #{news_feed_articles.last.title}"
+		# p "first article created at #{news_feed_articles.first.created_at} #{news_feed_articles.first}"
+		# p "#{Time.now} + Time.now - 86400/2 "
+		# if news_feed_articles.where(type: "TwitterArticle").empty? || Time.now - 86400/2 > news_feed_articles.where(type: "TwitterArticle").last.created_at
+			p "updated Twitter"
+
 			client = getTwitterClient
-			timeline = client.home_timeline(:count => 40, :include_entities => true)
+			since_id = since_id_twitter || 1000
+			timeline = client.home_timeline(:since_id => since_id, :count => 40, :include_entities => true)
 			timeline.each do |status|
 				insertTwitterArticle(status)
 			end
-		end
+			# fail
+			update_attributes(:since_id_twitter => timeline.first.id)  if timeline.first
 	end
 
 	def getTwitterClient
@@ -137,6 +149,10 @@ class User < ActiveRecord::Base
 		authentications.where(provider: "twitter").count > 0
 	end
 
+	def entriesAndName
+		entries.map { |entry| {entry: entry, name: name} }
+	end
+
 	private 
 		def insertFacebookArticle(results)
 			results.each do |result|
@@ -189,5 +205,7 @@ class User < ActiveRecord::Base
 		def secret_twitter_token 
 			authentications.where(provider: "twitter").first.token_secret if linkedTwitter?
 		end
+
+
 end
 

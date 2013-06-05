@@ -1,15 +1,15 @@
 FR.Views.EntryItemView = Backbone.View.extend({
 
-	initialize: function() {
+	initialize: function(vars) {
 		var that = this;
+		that.name = vars.name;
+
 		$("button.format").click(function() {
 			var text = $("button.format").text(); 
-			console.log(text);
 			if (text === "List View")
 				that.$el.removeClass('content-box');
-			else {
+			else 
 				that.$el.addClass('content-box');
-			}
 			that.render(); 
 		});
 	},
@@ -20,11 +20,14 @@ FR.Views.EntryItemView = Backbone.View.extend({
 
 		if ($("button.format").text() === "List View") { 
 			renderedContent = JST['entries/single_entry_list']({
-				entry: that.model
+				entry: that.model,
+				name: that.name
 			});
-		} else {			
+		} else {	
+		console.log(that.name);		
 			renderedContent = JST['entries/single_entry_tile']({
-				entry: that.model
+				entry: that.model,
+				name: that.name
 			});
 		}
 

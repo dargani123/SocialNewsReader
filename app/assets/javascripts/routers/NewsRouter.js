@@ -11,8 +11,18 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 		"followers": "requestFollowers",
 		"news_feed": "newsFeed",
 		"user_profiles/:id": "otherProfilePage",
-		"reading_list" : "readingList"
+		"reading_list" : "readingList", 
+		"following_news" : "followingNews"
 	}, 
+
+	followingNews: function(){
+		var $formatButton = $("<button class=format>List View</button>");
+		this.$rootEl.html($formatButton);
+
+		var followingView = new FR.Views.FollowingNews();
+		this.$rootEl.append(followingView.render().$el);
+		
+	},
 
 	profilePage: function() {
 		console.log("profilePage");
@@ -45,6 +55,7 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 
 	newsFeed: function() {
 		var that = this; 
+
 		var $formatButton = $("<button class=format>List View</button>");
 		that.$rootEl.html($formatButton);
 
@@ -52,19 +63,10 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 			collection: FR.Store.Articles
 		}); 
 
-		newsFeedView._addFollowingsArticle(function() {
-			FR.Store.Articles.fetch({ // rails does not matter here, need to sort it in the client side
-				success: function(articles){
-					$('.loading').remove();
-					newsFeedView._cleanse();
-					newsFeedView.render();
-				}
-			});
-		});
-
 		that.$rootEl.append(newsFeedView.render().$el);
-		console.log(newsFeedView.page);
-	},
+		newsFeedView.fetchArticles();
+
+  	},
 
 	otherProfilePage: function(id) {
 		var that = this;
@@ -73,9 +75,10 @@ FR.Routers.NewsRouter = Backbone.Router.extend ({
 
 		$.getJSON(
 			"/user_profiles/" + id, 
-			function(entries) {
+			function(profile) {
 				otherProfilePageView = new FR.Views.OtherProfile({
-					collection: new FR.Collections.Entries(entries)
+					collection: new FR.Collections.Entries(profile.entries),
+					username: profile.username
 				});
 			}
 		).done(

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130606132316) do
+ActiveRecord::Schema.define(:version => 20130606142103) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -52,15 +52,8 @@ ActiveRecord::Schema.define(:version => 20130606132316) do
     t.integer  "user_id"
   end
 
-  create_table "feeds", :force => true do |t|
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "title"
-    t.string   "description"
-    t.string   "icon_url"
-    t.string   "url"
-    t.integer  "user_id"
-  end
+# Could not dump table "feeds" because of following StandardError
+#   Unknown type 'uri' for column 'uri'
 
   create_table "followers", :force => true do |t|
     t.integer  "user_id"
@@ -83,7 +76,7 @@ ActiveRecord::Schema.define(:version => 20130606132316) do
     t.string   "profile_image_url"
     t.string   "name"
     t.integer  "author_id"
-    t.string   "text"
+    t.text     "text"
     t.integer  "score"
     t.string   "score_criteria"
     t.string   "image_url"

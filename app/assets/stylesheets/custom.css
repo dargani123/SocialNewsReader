@@ -298,6 +298,7 @@ input.sign-in-button{
     float:left;
     display: inline;
     border-radius: 6px;
+    width: 48%;
 }
 
 .twitter_sign{

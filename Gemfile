@@ -12,7 +12,7 @@ group :production do
 	gem 'pg'
 end
 
-gem 'devise'
+gem 'devise', '~> 2.0'
 
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'

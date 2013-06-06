@@ -191,7 +191,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   delayed_job
   delayed_job_active_record
-  devise
+  devise (~> 2.0)
   ejs
   fb_graph
   jquery-rails

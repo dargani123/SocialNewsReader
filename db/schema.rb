@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130604194342) do
+ActiveRecord::Schema.define(:version => 20130606123215) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -86,11 +86,11 @@ ActiveRecord::Schema.define(:version => 20130604194342) do
     t.string   "text"
     t.integer  "score"
     t.string   "score_criteria"
-    t.integer  "link_id"
     t.string   "image_url"
     t.string   "type"
     t.string   "description"
     t.string   "title"
+    t.string   "link_id"
   end
 
   create_table "reading_list_items", :force => true do |t|

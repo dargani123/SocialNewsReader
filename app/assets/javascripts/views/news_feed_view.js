@@ -169,6 +169,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	fetchArticles: function(){
+		console.log("articles fetched");
 		var that = this;
 		var last_id = this.collection.length;
 		that.collection.fetch({ // rails does not matter here, need to sort it in the client side

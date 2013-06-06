@@ -27,7 +27,7 @@ class AuthenticationsController < ApplicationController
       add_other_account(omni['credentials'].token, omni['credentials'].secret)
     else
       user = User.new 
-      user.name = omni.info.name
+      # user.name = omni.info.name
       user.apply_omniauth(omni) 
       if user.save
        flash[:notice] = "Logged in."

@@ -16,6 +16,7 @@ Devise.setup do |config|
   require 'devise/orm/active_record'
 
 
+
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
@@ -198,6 +199,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
+   config.omniauth :google_oauth2, "740550312562.apps.googleusercontent.com", "Dnpj_gSp5LhbxlfEhBOu9t0g", { access_type: "offline", approval_prompt: "" }   
    config.omniauth :twitter, "W8RDU5pwSsh3xXcwL7nnlQ", "ascFp5PQa5cH5XkBrp3PVhKzH7MDwnB52LOB0uDfAU"
    config.omniauth :facebook, '132855336905564', '76e4aab7609a18c49640c584387e740d',  :scope => 'publish_stream,offline_access,read_stream' 
    OmniAuth.config.logger = Logger.new(STDOUT)

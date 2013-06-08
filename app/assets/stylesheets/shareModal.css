@@ -19,10 +19,18 @@ textarea.modal-text-area {
 	background-color: #4c66a4;
 	color: white;
 	text-align: center;
+	font-weight: lighter;
 }
 
 .modal-header.modal-header-tweet {
 	background-color: #00acee;
+	color: white;
+	text-align: center;
+	font-weight: lighter;
+}
+
+.modal-header.modal-header-batch {
+	background-color: #E74C3C;
 	color: white;
 	text-align: center;
 	font-weight: lighter;
@@ -40,4 +48,63 @@ textarea.modal-text-area {
 }
 .close.close-white {
 	color: white;
+}
+
+.modal-number{
+	text-align: center;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+.row.batch-instructions-title{
+	margin: 0px;
+	background-color: #7F8C8D;
+	font-size: 18px; 
+	height: 25px;
+	padding-bottom: 3px;
+	padding-top: 6px;
+	padding-left: 6px;	
+	vertical-align: middle;
+	color: white;
+} 
+
+.row.batch-instructions-body{
+	margin: 0px;
+	height: 200px;
+}
+
+textarea.batch-input{
+	background-color: #ECF0F1;
+	width: 99%;
+	border: none;
+	border-radius: 0px; 
+	resize: none;
+	height: 70%;
+}
+
+textarea.batch-input:{
+	background-color: #ECF0F1;
+	width: 99%;
+	border: none;
+	border-radius: 0px; 
+	resize: none;
+	color: black	;
+}
+
+textarea.batch-input::-webkit-input-placeholder{
+	color: black;
+}
+
+
+.input-nav-bar{
+	margin-left: 0px;
+}
+
+.row-fluid .offset2 .input-nav-bar {
+	margin-left: 0px;
+}
+
+.modal-body-text{
+	text-align: left;
+	vertical-align: center;
 }

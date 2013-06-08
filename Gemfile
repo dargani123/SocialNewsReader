@@ -13,7 +13,7 @@ group :production do
 end
 
 gem 'devise', '~> 2.0'
-
+gem 'omniauth-google_oauth2'	
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'twitter'
@@ -24,7 +24,6 @@ gem 'better_errors'
 gem 'binding_of_caller'
 
 gem 'oa-core'
-
 
 
 

@@ -19,7 +19,6 @@
 
   $(function () {
 
-    var feedsData = <%= Feed.all.to_json.html_safe %>;
     var entriesData = <%= current_user.entries.to_json.html_safe %>;
      var followingsData = <%= current_user.followings.to_json.html_safe %>; 
      var articlesData = <%= current_user.news_feed_articles.to_json.html_safe %>;
@@ -31,7 +30,6 @@
 
     window.FR.initialize(
       $("#content"),
-      feedsData,
       entriesData,
       followingsData,
       articlesData,

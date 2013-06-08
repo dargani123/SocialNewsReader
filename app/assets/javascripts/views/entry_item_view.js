@@ -3,7 +3,9 @@ FR.Views.EntryItemView = Backbone.View.extend({
 	initialize: function(vars) {
 		var that = this;
 		that.name = vars.name;
-
+		that.$el.addClass("entry-article");
+		that.$el.attr("article-id", that.model.get('id'));
+		
 		$("button.format").click(function() {
 			var text = $("button.format").text(); 
 			if (text === "List View")

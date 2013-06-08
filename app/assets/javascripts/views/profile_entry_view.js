@@ -1,4 +1,4 @@
-FR.Views.ProfileEntryView = Backbone.View.extend ({ 
+	FR.Views.ProfileEntryView = Backbone.View.extend ({ 
 
 	initialize: function() {
 		var that = this;
@@ -6,7 +6,8 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		
 		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
 		that.$entryDetailEl = $('<div class=entry-detail> </div>');
-		that.$inputNavBar = JST['entry-input']();
+		that.$inputNavBar = $("<div class='input-nav-bar'>");
+		that.$inputNavBar.prepend(JST['entry-input']());
 
 
 		that.$el.prepend(that.$inputNavBar);
@@ -69,13 +70,22 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 		"click button.submit-post": "postEntry",
 		"click img.share-facebook": "askForFacebookText",
 		"click img.share-twitter": "askForTweetText",
-		"click button.share": "batchShare",
 		"click img.submit-tweet": "sendTweet",
 		"click img.submit-fb": "sendFB",
 		"click button.batch-share": "batchShare",
 		"click button.format": "clearInputBar",
-		"click input.entry-input": "clearIfTextExists"
+		"click input.entry-input": "clearIfTextExists",
+		"click .entry-article": "addToBatchShare"
+	},
 
+	addToBatchShare: function(ev){
+		console.log("addToBatchShare called");
+		if($('.batch-instructions-container').length > 0){
+			var id = $(ev.target).parents('.entry-article').attr('article-id');
+			var title = this.collection.get(id).get('title');
+			var currentText = $('.batch-input').attr('value');
+			$('.batch-input').attr('value', currentText + "\n" + title + ",");
+		}
 	},
 
 	clearIfTextExists: function(){
@@ -104,7 +114,11 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 	},
 
 	batchShare: function(){
-
+		console.log("batch share pressed");
+		if($('.batch-instructions-container').length == 0)
+			this.$inputNavBar.prepend(JST['entries/batchShareInstructions']());
+		else 
+			$('.batch-instructions-container').remove();
 	},
 
 	askForTweetText: function(ev) {
@@ -216,7 +230,8 @@ FR.Views.ProfileEntryView = Backbone.View.extend ({
 			url: that.request+escape(url),
 			success: function(embedly_data) {
 				var entryView = new FR.Views.EntryItemView({
-					model: that._setThatEntryAttributes(embedly_data)
+					model: that._setThatEntryAttributes(embedly_data),
+					name: FR.Store.username
 				});
 				that.$entryDetailEl.append(entryView.render().$el);
 

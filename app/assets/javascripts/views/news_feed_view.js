@@ -224,7 +224,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	_cleanse: function(callback) { // gets twitter articles pics and links from embedly 
-		console.log("cleanse called")
+		// console.log("cleanse called")
 		var that = this;
 		that.collection.each(function(article) { 
 			if (article.get('type') === "TwitterArticle" && article.get('title') === null) {

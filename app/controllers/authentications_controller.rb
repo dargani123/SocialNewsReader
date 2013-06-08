@@ -47,7 +47,7 @@ class AuthenticationsController < ApplicationController
     authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
 
     if authentication
-      authenticate
+      authenticate(authentication) # this thing never had the (authentication)?
     elsif current_user
       add_other_account(omni, omni['credentials'].token, omni['credentials'].secret)
     else
@@ -64,8 +64,32 @@ class AuthenticationsController < ApplicationController
        session[:omniauth] = omni.except('extra')
        redirect_to new_user_registration_path
       end
-
     end
+  end
+
+  def google_oauth2
+    omni = request.env["omniauth.auth"]
+    authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
+  
+    if authentication
+      authenticate(authentication)
+    elsif current_user
+      add_other_account(omni, omni['credentials'].token, omni['credentials'].secret)
+    else
+      user = User.new
+      user.email = omni['uid']
+      user.apply_omniauth(omni)
+      if user.save 
+       flash[:notice] = "Logged in."
+       sign_in user
+       redirect_to edit_user_registration_path
+      else
+       session[:omniauth] = omni
+       session[:email] = omni['uid']
+       redirect_to new_user_registration_path
+      end
+    end
+
   end
   
   def authenticate(authentication)

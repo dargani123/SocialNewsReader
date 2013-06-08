@@ -6,8 +6,8 @@ window.FR = {
 	Routers: {},
 	Store: {},
 
-	initialize: function ($content, feedsData, entriesData, followersData, articlesData, readingListData, $navbar, name){	
-		FR.Store.Feeds = {};
+	initialize: function ($content, entriesData, followersData, articlesData, readingListData, $navbar, name){	
+		// FR.Store.Feeds = {};
 		FR.Store.Entries = new FR.Collections.Entries(entriesData);
 		FR.Store.Followers = new FR.Collections.Followers(followersData);
 		FR.Store.Articles = new FR.Collections.Articles(articlesData);

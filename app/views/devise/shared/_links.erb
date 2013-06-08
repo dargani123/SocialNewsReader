@@ -1,7 +1,6 @@
 <%- if devise_mapping.omniauthable? %>
   <%- resource_class.omniauth_providers.each do |provider| %>
-  	<% image = "assets/connect_twitter.png" if provider.to_s.titleize=="Twitter" %>
-  	<% image = "assets/connect_facebook.png" if provider.to_s.titleize=="Facebook" %>
+  	<% image = "flat_#{provider}.png"%>
     <%= link_to image_tag(image, :class => "social_sign_in #{provider}_sign"), omniauth_authorize_path(resource_name, provider) %> 
   <% end -%>
 <% end -%>

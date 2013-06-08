@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :validatable,
          :recoverable, :rememberable, :trackable
-  devise :omniauthable, :omniauth_providers => [:facebook, :twitter]
+  devise :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
 
   
   # Setup accessible (or protected) attributes for your model
@@ -24,8 +24,7 @@ class User < ActiveRecord::Base
 	has_many :followings_entries, :through => :followings, :source => :entries
 
 	validates :name, :uniqueness => true
-	validates_format_of :name, :with => /^[A-Za-z\d_]+$/, :message => "can only be alphanumeric with no spaces"
-	
+	validates_format_of :name, :with => /^[A-Za-z\d_\d.]+$/, :message => "can only have letters, numbers, and _"
 
 
 	def apply_omniauth(omni)
@@ -33,7 +32,7 @@ class User < ActiveRecord::Base
 		   :provider => omni['provider'],
 		   :uid => omni['uid'],
 		   :token => omni['credentials'].token,
-		   :token_secret => omni['credentials'].secret)
+		   :token_secret => omni['credentials'].secret || "")
 	end
 
 	def password_required?

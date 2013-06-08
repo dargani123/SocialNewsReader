@@ -18,8 +18,26 @@
       color:white ;
 }
 
+#navbar {
+    border-radius: 6px;
+}
+
 .nav {
    text-shadow: none;  
+}
+
+.row-fluid .error-title{
+    margin-left: 0px; 
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+
+}
+
+.row-fluid .error-list{
+    margin-bottom: 15px;
+    font-size: 10px;
 }
 
 input.entry-input {
@@ -284,6 +302,10 @@ input.sign-in-button{
     font-weight: lighter;
 }
 
+input.sign-in-button:hover{
+    background-color: #2980B9;
+}
+
 .login-form{
     position: static;
 }
@@ -293,16 +315,51 @@ input.sign-in-button{
    height: 40px;;
 }
 
-.social_sign_in{
-    height: 40px;
-    float:left;
-    display: inline;
-    border-radius: 6px;
-    width: 48%;
+.row.social-buttons{
+    /*height: 60px;*/
+    margin-left: 0px;
 }
 
+.row .span4 .social_sign_in{
+    /*max-height: 80px;*/
+    height: 65%;
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-radius: 100%;
+    /*width: 48%;*/
+}
+
+.row .span4 .social_sign_in:hover{
+    /*max-height: 80px;*/
+    height: 75%;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-radius: 100%;
+    /*width: 48%;*/
+}
+
+img .social_sign_in{
+    height: 70%;
+}
+
+#error_explanation h2 {
+    visibility: hidden;
+    height: 0px;
+}
+
+#error_explanation ul {
+    list-style-type: none;
+}
+/*.social-buttons{
+    max-height: 40px;
+}*/
+
 .twitter_sign{
-    float: right;
+    /*float: right;*/
 }
 
 .transition{
@@ -340,6 +397,12 @@ input.sign-in-button{
     font-size: 20px;
     color: white; 
     font-weight: lighter;
+}
+
+.sign-up-button:hover{
+    color: white;
+    background-color: #C0392B;
+    text-decoration: none;
 }
 
 .clearfix { display: inline-block; }

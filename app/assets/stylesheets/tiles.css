@@ -18,12 +18,16 @@
 
     .content-box {
       width: 360px;
-      background: #7F8C8D;
+      background: white;
       float: left;
       margin: 10px;
       padding-bottom: 0px;
       position: relative;
       box-shadow:  2px 2px 2px #888888;
+    }
+
+    .text-content{
+      background-color: #7F8C8D;
     }
 
    /* .text-content: {

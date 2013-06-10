@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
+
 .modal-footer.share-footer{
 	border-top:none;
 }
@@ -58,7 +60,7 @@ textarea.modal-text-area {
 
 .row.batch-instructions-title{
 	margin: 0px;
-	background-color: #7F8C8D;
+	background-color: #34495E;
 	font-size: 18px; 
 	height: 25px;
 	padding-bottom: 3px;
@@ -70,16 +72,26 @@ textarea.modal-text-area {
 
 .row.batch-instructions-body{
 	margin: 0px;
+	height: 150px;
+}
+
+.row.batch-submit{
+	margin: 0px;
+}
+.row.batch-email-title{
+	margin: 0px;
 	height: 200px;
 }
 
 textarea.batch-input{
 	background-color: #ECF0F1;
-	width: 99%;
+	width: 100%;
 	border: none;
 	border-radius: 0px; 
 	resize: none;
-	height: 70%;
+	height: 100%;
+	margin-bottom: 0px;
+	padding: 0px;
 }
 
 textarea.batch-input:{
@@ -88,20 +100,104 @@ textarea.batch-input:{
 	border: none;
 	border-radius: 0px; 
 	resize: none;
-	color: black	;
+	color: black;
+	padding: 0px;
 }
 
 textarea.batch-input::-webkit-input-placeholder{
 	color: black;
 }
 
+input.batch-enter-email{
+	/*border: 0px;	*/
+	background-color: white;
+	width: 99%;
+	height: 25px;
+	color: black;
+	padding: 5px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 18px;
+	font-weight: lighter;
+	margin-bottom: 10px;
+	margin-top: 0px;
+}
+
+input.batch-enter-email::-webkit-input-placeholder{
+	color: #95A5A6;
+	font-weight: lighter;
+	margin-bottom: 5px;	
+}
 
 .input-nav-bar{
 	margin-left: 0px;
+	margin-top: 15px;
 }
 
 .row-fluid .offset2 .input-nav-bar {
 	margin-left: 0px;
+}
+
+.tag {
+	background-color: #1ABC9C;
+	/*margin-top: 15px; */
+	padding: 4px 4px 4px 4px;
+	color: white;
+	font-size: 12px;
+	margin-right: 10px;
+	line-height: 35px;
+	border-radius: 20px;
+}
+
+.tags-list{
+	height: 100%;
+	min-height: 25px;
+	margin-bottom: 5px;
+	line-height: 20px; 
+}
+
+.delete{
+	margin-right: 0px;
+	color: rgb(10, 138, 112);
+	display: hidden;
+}
+
+
+.delete:hover {
+	font-weight: bold;
+	color: white;
+	display: ;
+}
+
+.submit-batch-share {
+	border: none;
+	background-color: #E74C3C;
+	color: white;
+	border-radius: 0px;
+	width: 100%;
+	/*padding-top: 10px;*/
+	height: 100%;
+	float: left;
+	margin-bottom: 15px;
+}
+
+.confirm-password{
+	margin-top: 6px;
+	border: none;
+	color: white;
+	background-color: #E74C3C;
+}
+
+.span3.batch-password-span{
+	height: 25px;
+}
+
+input.batch-password {
+	padding: 0px;
+	border-radius: 0px;
+	width: 99%;
+	height: 25px;
+	margin-top: 5px;
+	margin-bottom: 15px;
 }
 
 .modal-body-text{

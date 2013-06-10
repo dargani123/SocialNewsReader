@@ -13,6 +13,17 @@
 		that.$el.prepend(that.$inputNavBar);
 		that.$root = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
 		that.$el.append(that.$root);
+
+		console.log(window.email);
+		console.log(window.gmail_access_token);
+		$.ajax({
+			url: "https://www.google.com/m8/feeds/contacts/" + window.email +"/full?access_token=" + window.gmail_access_token + "&alt=json",
+			dataType: "JSONP",
+			// beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+			success: function(contacts_data){
+					console.log(contacts_data);
+			}
+		});
 		
 		that._initializeFormatButtonListener();
 		that._buttonListenerToClearInputBar();
@@ -75,17 +86,90 @@
 		"click button.batch-share": "batchShare",
 		"click button.format": "clearInputBar",
 		"click input.entry-input": "clearIfTextExists",
-		"click .entry-article": "addToBatchShare"
+		"click .entry-article": "addToBatchShare",
+		"click .delete": "deletePressed",
+		"keyup .batch-enter-email": "submitTag",
+		"click .submit-batch-share": "askForPasswordConfirmation",
+		"click button.confirm-password": "sendBatchEmail"
+	},
+
+	sendBatchEmail: function(){
+		var that = this;
+		var password = $('input.batch-password').attr('value');
+		var email_text = $('.batch-input').attr('value');
+		var emails = $('.tag').clone().children().remove().end().text();
+
+		if(emails === ''){
+			that._insertTooltip('.batch-enter-email', "Uh Oh. Who is this going to?");
+		} else if (email_text.length  < 30) {
+			that._insertTooltip('.batch-instructions-title', "You are not sharing any articles!");
+		} else {
+			$.ajax({url: "/send_mails", 
+				type: 'POST',
+				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+				data: {
+					password: password,
+					email_text: email_text,
+					emails: emails
+				},
+				success: function(data) {
+					$('.batch-container').remove();
+						that.$inputNavBar.prepend(JST["batch-message"]({
+							message: "Message Successfully Sent"
+						})
+					);
+				},
+				error: function(obj){
+					var message = jQuery.parseJSON(obj.responseText).errors;
+						that.$inputNavBar.prepend(JST["batch-message"]({
+							message: message
+						})
+					);
+				}
+			});	
+		}
+	},
+
+	_insertTooltip: function(selector, message){
+		$(JST['tooltip']({
+			message: message
+		})).insertAfter(selector);
+	},
+
+	askForPasswordConfirmation: function(){
+		$($('.batch-instructions-container')[1]).append(JST['batch-password-field']());
+		$('.row.batch-submit').remove();
+	},
+
+	deletePressed: function(ev){
+		console.log("pressed");
+		$(ev.target).parents('.delete-me').remove();
+	},
+
+	submitTag: function(ev){
+		if(ev.keyCode === 13){
+			var email = $('input.batch-enter-email').attr('value');
+			$('input.batch-enter-email').attr('value', "");	
+			$('.tags-list').append("<span class='tag delete-me'>" + email + "<span class='delete'>  x</span> </span>")
+		}
 	},
 
 	addToBatchShare: function(ev){
 		console.log("addToBatchShare called");
 		if($('.batch-instructions-container').length > 0){
 			var id = $(ev.target).parents('.entry-article').attr('article-id');
-			var title = this.collection.get(id).get('title');
+			var entry = this.collection.get(id); 
 			var currentText = $('.batch-input').attr('value');
-			$('.batch-input').attr('value', currentText + "\n" + title + ",");
+			$('.batch-input').attr('value', currentText + "\n" + entry.get('title') + "\n" + entry.get('url') + "," + "\n");
 		}
+	},
+
+	batchShare: function(){
+		console.log("batch share pressed");
+		if($('.batch-container').length == 0)
+			this.$inputNavBar.prepend(JST['entries/batchShareInstructions']());
+		else 
+			$('.batch-container').remove();
 	},
 
 	clearIfTextExists: function(){
@@ -111,14 +195,6 @@
 		$el.masonry('destroy');
 		$el.removeClass(classes);
 		$el.removeAttr('style');
-	},
-
-	batchShare: function(){
-		console.log("batch share pressed");
-		if($('.batch-instructions-container').length == 0)
-			this.$inputNavBar.prepend(JST['entries/batchShareInstructions']());
-		else 
-			$('.batch-instructions-container').remove();
 	},
 
 	askForTweetText: function(ev) {

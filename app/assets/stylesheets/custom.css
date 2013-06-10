@@ -35,6 +35,10 @@
 
 }
 
+ul{
+    list-style-type: none;
+}
+
 .row-fluid .error-list{
     margin-bottom: 15px;
     font-size: 10px;
@@ -51,7 +55,7 @@ input.entry-input {
      text-align: middle;
      font-weight: lighter;
      background-color: #1ABC9C;
-     border: none;
+     /*border: none;*/
      border-radius: 0px;
      color: white;
      display: inline-block;
@@ -63,7 +67,7 @@ input.entry-input:focus {
 }
 
 #entry-input{
-    padding-bottom: 3px;
+    padding-bottom: 2px;
     padding-top: 6px;
     vertical-align: middle;
 }
@@ -138,10 +142,7 @@ input.entry-input::-webkit-input-placeholder { /* WebKit browsers */
      margin-top: 8px;
      font-size: 18px;
      display: inline-block;
-     color: white;
-     background-color: #ECF0F1;
-     color: #34495e;
-     border: none;  
+     border-radius: 0px; 
 }
 .container-fluid {
      padding-left: 0px;
@@ -399,10 +400,71 @@ img .social_sign_in{
     font-weight: lighter;
 }
 
+li.ui-menu-item{
+    background-color: #ECF0F1;
+    width: 208px;
+    border-radius: 0px;
+    padding: 5px 5px 5px 5px;
+    border-color: #7F8C8D;
+    border: 10px;
+}
+
+li.ui-menu-item:hover{
+    background-color: #1ABC9C;
+}
+a.ui-corner-all{
+    color: #2C3E50;
+    border-color: #7F8C8D;
+    border: 10px;
+}
+
 .sign-up-button:hover{
     color: white;
     background-color: #C0392B;
     text-decoration: none;
+}
+
+
+.batch-message-row {
+    background-color: #ECF0F1;
+    color: #7F8C8D;
+    border: 0px;
+}
+
+.batch-message-row .delete{
+    color: #7F8C8D;
+}
+
+.batch-message-row .delete:hover{
+    color: #7F8C8D;
+}
+
+.tooltip-email{
+    width: 400px;
+    opacity: 1;
+}
+
+.tooltip.in {
+    opacity: 1;
+}
+.tooltip-inner{
+    font-size: 20px;
+    line-height: 20px;
+    padding: 10px;
+    background-color: #2C3E50;
+    color: #ECF0F1;
+    font-weight: bold;
+    width: 100%;
+    max-width: 500px;
+    opacity: 1;
+}
+
+.tooltip-inner .delete {
+    color: #BDC3C7;
+}
+
+.tooltip-inner .delete:hover {
+    color: white;
 }
 
 .clearfix { display: inline-block; }

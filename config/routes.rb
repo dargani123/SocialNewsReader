@@ -24,6 +24,8 @@ NewsReader::Application.routes.draw do
   resources :reading_list_items, :only => [:index, :create, :destroy]
   resources :test_bookmarklets
   resources :reading_list_follower_entries, :only => [:index]
+  resources :send_mails
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

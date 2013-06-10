@@ -25,6 +25,8 @@ gem 'binding_of_caller'
 
 gem 'oa-core'
 
+gem 'gmail'
+
 
 
 # Gems used only for assets and not required

@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
 	validates :name, :uniqueness => true
 	validates_format_of :name, :with => /^[A-Za-z\d_\d.]+$/, :message => "can only have letters, numbers, and _"
-
+	validates :email, :uniqueness => true
 
 	def apply_omniauth(omni)
 		authentications.build(

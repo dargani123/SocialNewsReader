@@ -8,3 +8,9 @@
 	  <% end -%>
 	<% end -%>
 </div>
+
+<% if flash[:notice] %>
+      <div class="row row-notice delete-me">
+      	<button class="span12 flash-notice"> <%= flash[:notice] %><span class="delete">  x</span></button>
+      </div>
+<% end %>

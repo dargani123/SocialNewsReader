@@ -15,4 +15,15 @@ class RegistrationsController < Devise::RegistrationsController
 		session[:omniauth] = nil unless @user.new_record?
 	end
 
+	def new
+		if session[:omniauth] && User.find_by_email(session[:email])
+			session[:omniauth] = nil;
+			session[:email] = nil;
+			flash[:notice] = "Someone already used that gmail account!"
+			redirect_to new_user_session_url 
+		else 
+			super
+		end
+	end
+
 end

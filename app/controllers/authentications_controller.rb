@@ -97,7 +97,7 @@ class AuthenticationsController < ApplicationController
       sign_in_and_redirect User.find(authentication.user_id)
   end 
 
-  def add_other_account(token, token_secret)
+  def add_other_account(omni, token, token_secret)
       current_user.authentications.create!(:provider => omni['provider'], :uid => omni['uid'], :token => token, :token_secret => token_secret)
       flash[:notice] = "Authentication successful."
       sign_in_and_redirect current_user

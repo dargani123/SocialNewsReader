@@ -5,8 +5,14 @@ FR.Views.ReadingListView = Backbone.View.extend({
 		that.request = "http://api.embed.ly/1/extract?key=282f981be6bc44a18574f9adf009c1f3&url=";
 		
 		that.collection.on("change", that.render, that);
-		// that.$el = $("button.format").text() === "List View" ? $("<div>") : $("<div class='masonrycontainer2 span12'>");
-		that.$el = $("<div>");
+		that.$root = $("<div>");
+		that.$bookmarklet = $("<div class='bookmarklet'>");
+		that.$bookmarklet.append(JST['bookmarklet']());
+
+		that.$el.append(that.$root);
+		that.$el.prepend(that.$bookmarklet);
+
+		that.$bookmarklet.addClass("bookmarklet");
 		that._initializeFormatButtonListener();
 	},
 
@@ -26,9 +32,9 @@ FR.Views.ReadingListView = Backbone.View.extend({
 			text = $("button.format").text(); 
 
 			if (text === "Tile View") 
-				that._startMasonry(that.$el, "masonrycontainer span12");
+				that._startMasonry(that.$root, "masonrycontainer span12");
 			else 
-				that._removeMasonryAndStyling(that.$el, "masonrycontainer span12 masonry");
+				that._removeMasonryAndStyling(that.$root, "masonrycontainer span12 masonry");
 		});
 	},
 
@@ -53,7 +59,7 @@ FR.Views.ReadingListView = Backbone.View.extend({
 	          columnWidth : 380,
 	          isAnimated: true
 	        });
-			$('.masonrycontainer2').masonry('reload');
+			$('.masonrycontainer').masonry('reload');
 		});
 	},
 
@@ -63,10 +69,14 @@ FR.Views.ReadingListView = Backbone.View.extend({
 		var that = this; 
 		that.collection.each(function(list_item) {
 			var type = list_item.get('article_type');
+			console.log(list_item);
+			console.log(list_item.get('article_id'));
+			console.log(list_item.get('article_type'));
 
 			if (type === "TwitterArticle" || type === "FacebookArticle") {
-				var article = FR.Store.Articles.where({type: list_item.get('article_type'), link_id: list_item.get('article_id')})[0];
-				that.$el.append(that._newArticleView(article).render().$el);
+				var article = FR.Store.Articles.where({type: type, link_id: list_item.get('article_id') + ""})[0];
+				console.log("article", article);
+				that.$root.append(that._newArticleView(article).render().$el);
 			
 			} else if (type === "follower"){
 				$.ajax({
@@ -80,7 +90,7 @@ FR.Views.ReadingListView = Backbone.View.extend({
 							model: entry
 						});
 
-						that.$el.append(entryView.render().$el);
+						that.$root.append(entryView.render().$el);
 					}
 				});
 			} else if (type === "bookmarklet"){
@@ -112,7 +122,7 @@ FR.Views.ReadingListView = Backbone.View.extend({
 					model: that._setThatEntryAttributes(embedly_data)
 				});
 
-				that.$el.append(entryView.render().$el);
+				that.$root.append(entryView.render().$el);
 			}
 		});
 	},

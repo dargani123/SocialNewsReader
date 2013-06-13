@@ -1,0 +1,9 @@
+<a href="javascript:
+
+  console.log('loaded');
+  var iframe = document.createElement('iframe');
+  iframe.src = 'http://vast-island-9760.herokuapp.com/test_bookmarklets?url=' + document.location;
+  iframe.style = 'z-index: 2147483000';
+  document.getElementsByTagName('body')[0].appendChild(iframe);  
+
+">Paste me into Bookmarks Tab, Click to add article to reading list!</a>

@@ -1,4 +1,4 @@
-FR.Views.NewsFeedView = Backbone.View.extend({
+	FR.Views.NewsFeedView = Backbone.View.extend({
 
 	initialize: function() {
 		var that = this; 
@@ -13,6 +13,8 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		that.$root.attr('id', 'display-list');
 		that.$socialFeed = $("<div class=SocialFeed>");
 		that.$socialFeed.attr('id', 'display-list');
+
+		console.log(document.URL.substring(document.URL.lastIndexOf('/')));
 
 		that._initializeFormatButtonListener();
 		that._startFetchingArticles();
@@ -51,7 +53,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 	},
 
 	_atBottom: function(){
-		return ($(window).scrollTop() + $(window).height() > $(document).height());
+		return ($(window).scrollTop() + $(window).height() > $(document).height() && document.URL.substring(document.URL.lastIndexOf('/')) === "/news_feed");
 	},
 
 	_initializeFormatButtonListener: function() { // This method is different from profile view one, has add following articles, and has two elements instead of one 
@@ -106,6 +108,7 @@ FR.Views.NewsFeedView = Backbone.View.extend({
 		var that = this; 
 		that.rendering = true; 
 		console.log("render called");
+		console.log( document.URL.substring(document.URL.lastIndexOf('/')) === "/news_feed");
 
 		var articles = new FR.Collections.Articles(that.collection.slice((that.page*10),(that.page*10+10)));
 

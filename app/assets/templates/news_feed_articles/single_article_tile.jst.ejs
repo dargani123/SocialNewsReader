@@ -8,7 +8,7 @@
           <img src='/fb_button.png' class="share-facebook" data-fb=<%=article.escape('id')%> >
           <img src='/tweet.png' class="share-twitter" data-twt=<%=article.escape('id')%>>
           <button class="add-reading-list readingpost" data-article-id="<%=article.get('link_id')%>" data-type="<%=article.get('type')%>">
-            <%= FR.Store.ReadingList.where({article_id: parseInt(article.escape('link_id')), article_type: article.escape('type')}).length > 0 ? "On Reading List" : "Add Reading List" %>
+            <%= FR.Store.ReadingList.where({article_id: article.escape('link_id'), article_type: article.escape('type')}).length > 0 ? "On Reading List" : "Add Reading List" %>
           </button> 
           <br class="clearfix" />
         </div>

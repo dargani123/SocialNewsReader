@@ -9,6 +9,7 @@ FR.Views.ArticleItemView = Backbone.View.extend({
 				that.$el.addClass('content-box');
 			that.render(); 
 		});
+		// console.log(that.model);
 
 		that.model.on("change", that.render, that);
 	},

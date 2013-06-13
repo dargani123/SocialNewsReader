@@ -12,7 +12,7 @@
           <img src='/tweet.png' class="share-twitter" data-twt=<%=entry.get('id')%>>
         </a>
           <button class="add-reading-list" data-article-id="<%=entry.get('id')%>" data-type="follower">
-          <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
+            <%= FR.Store.ReadingList.where({article_id: parseInt(entry.escape('id')), article_type: "follower"}).length > 0 ? "On Reading List" : "Add Reading List" %>
           </button>   
           <br class="clearfix" />
         </div>

@@ -12,7 +12,7 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 	},
 
 	_onReadingList: function(link_id, type) {
-		return FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type}).length > 0
+		return FR.Store.ReadingList.where({article_id: link_id, article_type: type}).length > 0
 	},
 
 	addToReadingList: function(ev, entry_collection) {	
@@ -36,7 +36,7 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 
 			$(ev.target).text("On Reading List");
 		} else {
-			var item = FR.Store.ReadingList.where({article_id: parseInt(link_id), article_type: type})[0];
+			var item = FR.Store.ReadingList.where({article_id: link_id, article_type: type})[0];
 			item.destroy({
 				success: function() {
 					$(ev.target).text("Add to Reading List");	

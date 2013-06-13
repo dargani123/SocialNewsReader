@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130606144052) do
+ActiveRecord::Schema.define(:version => 20130610223200) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(:version => 20130606144052) do
 
   create_table "followers", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "uid"
+    t.string   "uid"
     t.string   "type"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(:version => 20130606144052) do
   create_table "reading_list_items", :force => true do |t|
     t.string   "article_type"
     t.integer  "user_id"
-    t.integer  "article_id"
+    t.string   "article_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.string   "url"

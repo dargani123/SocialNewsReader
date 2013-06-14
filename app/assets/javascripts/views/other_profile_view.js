@@ -47,24 +47,6 @@ FR.Views.OtherProfile = Backbone.View.extend({
 		$("button.format").text(text === "List View" ? "Tile View" : "List View");
 	},
 
-	_removeMasonryAndStyling: function($el, classes) {
-		$el.masonry();
-		$el.masonry('destroy');
-		$el.removeClass(classes);
-		$el.removeAttr('style');
-	},
-
-	_startMasonry: function($masonryEl, classes){
-		$masonryEl.addClass(classes);
-		$masonryEl.imagesLoaded(function(){
-	        $masonryEl.masonry({
-	          itemSelector : '.content-box',
-	          columnWidth : 380,
-	          isAnimated: true
-	        });
-		});
-	},
-
 	_FollowButtonText: function(){
 		return (this._isFollowing() ? "UnFollow" : "Follow");
 	},
@@ -140,7 +122,26 @@ FR.Views.OtherProfile = Backbone.View.extend({
 				} 
 			});
 		} 
-	}
+	},
+
+	_removeMasonryAndStyling: function($el, classes) {
+		$el.masonry();
+		$el.masonry('destroy');
+		$el.removeClass(classes);
+		$el.removeAttr('style');
+	},
+
+	_startMasonry: function($masonryEl, classes){
+		$masonryEl.addClass(classes);
+		$masonryEl.imagesLoaded(function(){
+	        $masonryEl.masonry({
+	          itemSelector : '.content-box',
+	          columnWidth : 380,
+	          isAnimated: true
+	        });
+		});
+	},
+
 
 });
 

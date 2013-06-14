@@ -109,7 +109,8 @@ class User < ActiveRecord::Base
 			friend_ids = facebook_friend_ids
 			threads, results = [], []
 
-			0.upto(friend_ids.length/10) do |i| 
+			# 0.upto(friend_ids.length/10) do |i| 
+			0.upto(40) do |i| 	
 				threads << Thread.new { 
 						ids = []
 						index = (i*10) 

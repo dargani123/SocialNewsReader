@@ -2,7 +2,7 @@ class NewsFeedArticlesController < ApplicationController
 	
 	def index 
 		current_user.updateTwitterFeedStories if current_user.linkedTwitter?
-		current_user.updateFacebookFeedStories if current_user.linkedFacebook?
+		current_user.delay.updateFacebookFeedStories if current_user.linkedFacebook?
 		
 		render :json => current_user.news_feed_articles
 	end

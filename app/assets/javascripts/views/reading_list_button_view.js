@@ -17,7 +17,7 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 
 	addToReadingList: function(ev, entry_collection) {	
 		var link_id = $(ev.target).attr('data-article-id');
-		var type = $(ev.target).attr('data-type');
+		var type = $(ev.target).attr('data-type'); // Follower: Any user on the site including you. Clean up semantics here. 
 		var that = this;
 
 		if (!that._onReadingList(link_id, type)) {
@@ -39,7 +39,7 @@ FR.Views.ReadingListButtonView = Backbone.View.extend({
 			var item = FR.Store.ReadingList.where({article_id: link_id, article_type: type})[0];
 			item.destroy({
 				success: function() {
-					$(ev.target).text("Add to Reading List");	
+					$(ev.target).text("Add Reading List");	
 				} 
 			});
 

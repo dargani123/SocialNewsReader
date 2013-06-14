@@ -189,6 +189,7 @@ input.batch-enter-email::-webkit-input-placeholder{
 
 .span3.batch-password-span{
 	height: 25px;
+	margin-left: 0px;
 }
 
 input.batch-password {

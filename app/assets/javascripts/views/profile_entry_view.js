@@ -90,7 +90,13 @@
 		"click .delete": "deletePressed",
 		"keyup .batch-enter-email": "submitTag",
 		"click .submit-batch-share": "askForPasswordConfirmation",
-		"click button.confirm-password": "sendBatchEmail"
+		"click button.confirm-password": "sendBatchEmail",
+		"click .add-reading-list": "addToReadingList"
+	},
+
+	addToReadingList: function(ev) {	
+		var listButton = new FR.Views.ReadingListButtonView();
+		listButton.addToReadingList(ev);
 	},
 
 	sendBatchEmail: function(){

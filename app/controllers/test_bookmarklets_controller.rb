@@ -15,3 +15,12 @@ class TestBookmarkletsController < ApplicationController
 	end
 
 end
+# <a href="javascript:
+
+#   console.log('loaded');
+#   var iframe = document.createElement('iframe');
+#   iframe.src = 'http://localhost:3000/test_bookmarklets?url=' + document.location;
+#   iframe.style = 'z-index: 2147483000';
+#   document.getElementsByTagName('body')[0].appendChild(iframe);  
+
+# ">Add to Reading List</a>

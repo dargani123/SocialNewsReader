@@ -17,12 +17,23 @@ FR.Views.ReadingListView = Backbone.View.extend({
 	},
 
 	events: {
-		"click .add-reading-list": "addReadingList"
+		"click .add-reading-list": "destroyReadingListItem"
 	},	
 
-	addReadingList: function(ev){
-		var listButton = new FR.Views.ReadingListButtonView();
-		listButton.addToReadingList(ev, this.collection);
+	destroyReadingListItem: function(ev){
+		var link_id = $(ev.target).attr('data-article-id');
+		var type = $(ev.target).attr('data-type'); // Follower: Any user on the site including you. Clean up semantics here. 
+		console.log("type", type);
+		var item = FR.Store.ReadingList.where({article_id: link_id, article_type: type})[0];
+		if (item == undefined) 
+			item = FR.Store.ReadingList.get($(ev.target).attr('data-reading-list-id'));
+			item.destroy({
+				success: function() {
+					$(ev.target).text("Add Reading List");	
+				} 
+			});
+		
+		$(ev.target).parents('.panel').remove();
 	},
 
 	_initializeFormatButtonListener: function() {
@@ -69,13 +80,9 @@ FR.Views.ReadingListView = Backbone.View.extend({
 		var that = this; 
 		that.collection.each(function(list_item) {
 			var type = list_item.get('article_type');
-			console.log(list_item);
-			console.log(list_item.get('article_id'));
-			console.log(list_item.get('article_type'));
 
 			if (type === "TwitterArticle" || type === "FacebookArticle") {
 				var article = FR.Store.Articles.where({type: type, link_id: list_item.get('article_id') + ""})[0];
-				console.log("article", article);
 				that.$root.append(that._newArticleView(article).render().$el);
 			
 			} else if (type === "follower"){
@@ -85,7 +92,6 @@ FR.Views.ReadingListView = Backbone.View.extend({
 					data: {article_id: list_item.get('article_id')},
 					success: function(entry_data) {
 						var entry = new FR.Models.Entry(entry_data);
-						
 						var entryView = new FR.Views.EntryItemView({
 							model: entry
 						});
@@ -94,9 +100,9 @@ FR.Views.ReadingListView = Backbone.View.extend({
 					}
 				});
 			} else if (type === "bookmarklet"){
-				console.log(list_item);
+				console.log("book", list_item);
 				var url = list_item.get('url'); 
-				that._setEmbedly(url);
+				that._setEmbedly(url, list_item.get('id'));
 			}
 
 		}); 
@@ -112,31 +118,35 @@ FR.Views.ReadingListView = Backbone.View.extend({
 		return articleView;
 	},
 
-	_setEmbedly: function(url) { /// CHANGED THIS ONE COMPARED TO THE OTHER PAGES! 
+	_setEmbedly: function(url, id) { /// CHANGED THIS ONE COMPARED TO THE OTHER PAGES! 
 		var that = this;
 		$.ajax({
 			dataType: "JSONP",
 			url: that.request+escape(url),
 			success: function(embedly_data) {
+				console.log(that._setThatEntryAttributes(embedly_data));
 				var entryView = new FR.Views.EntryItemView({
-					model: that._setThatEntryAttributes(embedly_data)
+					model: that._setThatEntryAttributes(embedly_data),
+					name: FR.Store.username
 				});
 
-				that.$root.append(entryView.render().$el);
+				var renderedView = entryView.render().$el;
+				renderedView.find('.add-reading-list').attr('data-reading-list-id', id)
+				that.$root.append(renderedView);
 			}
 		});
 	},
 
 	_setThatEntryAttributes: function(embedly_data){
 		var that = this;
-		that.entry = new FR.Models.Entry({
+		var entry = new FR.Models.Entry({
 			title: embedly_data.title,
 			description: embedly_data.description, 
 			image: that._largestPictureUrl(embedly_data), 
 			provider_url: embedly_data.provider_url,
 			url: embedly_data.original_url
 		});
-		return that.entry
+		return entry;
 	},
 
 	_largestPictureUrl: function(embedly_data){
